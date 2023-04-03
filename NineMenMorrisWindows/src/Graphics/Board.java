@@ -43,7 +43,7 @@ public class Board extends JPanel{
         setupStoneMatrix();
         
     }
-    // hey this is a test!
+    // hey this is a test! and this is another test
     void setupStoneMatrix() 
     {
     	for(int i = 0; i < 7; i++) 
