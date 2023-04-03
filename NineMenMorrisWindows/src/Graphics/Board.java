@@ -63,9 +63,7 @@ public class Board extends JPanel{
     }
     
     public void stonePlaced(Stone stone) // stone placing phase
-	{
-    	logicGame.printAllMoves(logicGame.allPossibleStonePlaces(game.currentPlayerColor));
-    	
+	{	
 		if(game.playerTurn == 0) 
 		{
 			game.firstColorStonesLeft--;
@@ -88,12 +86,13 @@ public class Board extends JPanel{
 			game.changeTurn();
 		
 		repaintAllPanels();
+		
+		logicGame.LBoard.printLBoard();
+		logicGame.printAllMoves(logicGame.allPossibleStonePlaces(game.currentPlayerColor));
 	}
     
     public void stoneClicked(Stone stone)
     {	
-    	logicGame.printAllMoves(logicGame.allPossibleMoves(game.currentPlayerColor));
-    	
     	if(shouldRemoveStone) 
     	{
     		if(isAllowedToBeRemoved(stone)) // removing a right colored stone
@@ -141,6 +140,8 @@ public class Board extends JPanel{
         	}
     	}
     	repaintAllPanels();
+    	logicGame.LBoard.printLBoard();
+		logicGame.printAllMoves(logicGame.allPossibleMoves(game.currentPlayerColor));
     }
     
     public boolean isAllowedToBeRemoved(Stone stone) 

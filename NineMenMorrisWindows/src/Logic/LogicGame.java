@@ -79,12 +79,12 @@ public class LogicGame {
 		
 		for(int duoIndex = 0; duoIndex < Board.allowedColArr.length; duoIndex++) 
 		{
-			if(isMoveAllowed(stone, GBoard.stoneArr[GBoard.allowedRowArr[duoIndex]][GBoard.allowedColArr[duoIndex]])) 
+			if(isMoveAllowed(stone, GBoard.stoneArr[GBoard.allowedRowArr[duoIndex]][GBoard.allowedColArr[duoIndex]]) 
+					&& LBoard.LBoard[GBoard.allowedRowArr[duoIndex]][GBoard.allowedColArr[duoIndex]] == LogicBoard.playableChar) 
 			{
 				allowedMovesArr.add(new LogicStone(GBoard.allowedRowArr[duoIndex], GBoard.allowedColArr[duoIndex]));
 			}
 		}
-		
 		return allowedMovesArr;
 	}
 	
