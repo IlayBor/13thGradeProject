@@ -24,9 +24,13 @@ public class LogicGame {
 	
 	public boolean isWinner(Color _color) 
 	{
+		Color loserColor = _color == Game.firstColor ? Game.secColor : Game.firstColor;
+		printAllMoves(allPossibleMoves(loserColor));
 		if(_color == Game.firstColor && secColorStonesLeft < 3)
 			return true;
 		if(_color == Game.secColor && firstColorStonesLeft < 3)
+			return true;
+		if(allPossibleMoves(loserColor).size() == 0)
 			return true;
 		return false;
 	}
@@ -172,6 +176,7 @@ public class LogicGame {
 			LogicStone logicStone = possibleMoves.get(i);
 			System.out.println("Row:" + logicStone.row + " Col:" + logicStone.col);
 		}
-		System.out.println("-------------------------");
+		System.out.print("size: ");
+		System.out.println(possibleMoves.size());
 	}
 }

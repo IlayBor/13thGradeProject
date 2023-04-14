@@ -87,15 +87,15 @@ public class Board extends JPanel{
 		
 		repaintAllPanels();
 		
-		logicGame.LBoard.printLBoard();
-		logicGame.printAllMoves(logicGame.allPossibleStonePlaces(game.currentPlayerColor));
+		//logicGame.LBoard.printLBoard();
+		//logicGame.printAllMoves(logicGame.allPossibleStonePlaces(game.currentPlayerColor));
 	}
     
     public void stoneClicked(Stone stone)
     {	
     	if(shouldRemoveStone) 
     	{
-    		if(isAllowedToBeRemoved(stone)) // removing a right colored stone
+    		if(isAllowedToBeRemoved(stone))
     		{
     			if(stone.stoneColor == Game.firstColor)
     				logicGame.firstColorStonesLeft--;
@@ -104,26 +104,23 @@ public class Board extends JPanel{
     			
     			stone.removeStone();
     			logicBoard.setValue(stone.row, stone.col, null);
+    			 
+    			checkForWinner();
     			
-    			if(logicGame.isWinner(game.currentPlayerColor))
-    			{
-    				javax.swing.JOptionPane.showMessageDialog(null, "Player " + (game.playerTurn+1) + " Won!");
-    				game.frame.MoveToHome();
-    			}    			
     			unmarkTrio();
     			shouldRemoveStone = false;
     			game.changeTurn();
     		}
     	}
-    	else if(!game.isPlacingPhase) // not placing phase
+    	else if(!game.isPlacingPhase) // moving phase
     	{
     		unmarkAllowedMoves();
-    		if(stone.stoneColor != null && stone.stoneColor == game.currentPlayerColor) // panel with right colored stone clicked
+    		if(stone.stoneColor != null && stone.stoneColor == game.currentPlayerColor) // "copy" stone
         	{
         		lastClickedStone = stone;
         		markAllowedMoves(stone);
         	}
-        	else if(stone.stoneColor == null && lastClickedStone != null && logicGame.isMoveAllowed(lastClickedStone, stone))// panel without stone clicked, and there is stone picked, and move is allowed.
+        	else if(stone.stoneColor == null && lastClickedStone != null && logicGame.isMoveAllowed(lastClickedStone, stone))// "paste" stone
         	{	
     			stone.drawStone(lastClickedStone.stoneColor);
     			logicBoard.setValue(stone.row, stone.col, stone.stoneColor);
@@ -135,13 +132,25 @@ public class Board extends JPanel{
         		
         		checkAndMarkForTrio(stone);
         		
+        		checkForWinner();
+        		
         		if(!shouldRemoveStone)
         			game.changeTurn();	
         	}
     	}
+    	
     	repaintAllPanels();
-    	logicGame.LBoard.printLBoard();
-		logicGame.printAllMoves(logicGame.allPossibleMoves(game.currentPlayerColor));
+    	//logicGame.LBoard.printLBoard();
+		//logicGame.printAllMoves(logicGame.allPossibleMoves(game.currentPlayerColor));
+    }
+    
+    public void checkForWinner() 
+    {
+    	if(logicGame.isWinner(game.currentPlayerColor))
+		{
+			javax.swing.JOptionPane.showMessageDialog(null, "Player " + (game.playerTurn+1) + " Won!");
+			game.frame.MoveToHome();
+		}
     }
     
     public boolean isAllowedToBeRemoved(Stone stone) 

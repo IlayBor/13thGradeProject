@@ -51,7 +51,7 @@ public class Stone extends JPanel{
 		    	}
 	    		if(board.game.isPlacingPhase) // placing phase
 	    		{
-	    			if(board.shouldRemoveStone) // remove stage
+	    			if(board.shouldRemoveStone) // remove phase
 	    			{
 	    				if(board.game.currentPlayerColor == stoneColor) // same color glow
 	    		    	{
