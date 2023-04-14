@@ -10,11 +10,13 @@ import Graphics.Stone;
 public class LogicGame {
 	
 	// way to rate - move that will create - 3 is the best, 2 is second best, 1 is the worst. and MOBILITY!
+	public static int aiLevel = 0; // 0 - None, 1 - Easy, 2 - Medium, 3 - Hard
 	
-	public Board GBoard;
-	public LogicBoard LBoard; 
-	public int firstColorStonesLeft = 9;
-	public int secColorStonesLeft = 9;
+	private Board GBoard;
+	private LogicBoard LBoard; 
+	
+	private int firstColorStonesLeft = 9;
+	private int secColorStonesLeft = 9;
 	
 	public LogicGame(LogicBoard _LBoard, Board _GBoard) 
 	{
@@ -179,4 +181,21 @@ public class LogicGame {
 		System.out.print("size: ");
 		System.out.println(possibleMoves.size());
 	}
+	
+	public int getFirstColorStonesLeft() {
+		return firstColorStonesLeft;
+	}
+
+	public void setFirstColorStonesLeft(int firstColorStonesLeft) {
+		this.firstColorStonesLeft = firstColorStonesLeft;
+	}
+
+	public int getSecColorStonesLeft() {
+		return secColorStonesLeft;
+	}
+
+	public void setSecColorStonesLeft(int secColorStonesLeft) {
+		this.secColorStonesLeft = secColorStonesLeft;
+	}
+
 }

@@ -16,7 +16,7 @@ import org.w3c.dom.Text;
 
 public class Home extends JPanel implements ActionListener{
 	private Frame frame;
-	private JButton localButton, AiButton, settingsButton;
+	private JButton localButton, rulesButton, settingsButton;
 	private ImageIcon image;
 	
 	public Home(Frame _frame) 
@@ -26,26 +26,31 @@ public class Home extends JPanel implements ActionListener{
 		
 		image = new ImageIcon("images/BackgroundImage.jpeg");
 		
-		localButton = new JButton("Play Local");
+		localButton = new JButton("Play!");
 		localButton.setBounds(400,275,200,50);
 		localButton.addActionListener(this);
 		add(localButton);
 		
-		AiButton = new JButton("Play Ai");
-		AiButton.setBounds(400,375,200,50);
-		AiButton.addActionListener(this);
-		add(AiButton);
-		
 		settingsButton = new JButton("Settings");
-		settingsButton.setBounds(400,475,200,50);
+		settingsButton.setBounds(400,375,200,50);
 		settingsButton.addActionListener(this);
 		add(settingsButton);
+		
+		rulesButton = new JButton("Rules");
+		rulesButton.setBounds(400,475,200,50);
+		rulesButton.addActionListener(this);
+		add(rulesButton);
+		
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == localButton)
 		{
 			frame.MoveToGame();
+		}
+		if(e.getSource() == settingsButton) 
+		{
+			frame.MoveToSettings();
 		}
 	}
 	

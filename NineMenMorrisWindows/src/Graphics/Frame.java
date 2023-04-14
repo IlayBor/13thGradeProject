@@ -6,6 +6,7 @@ public class Frame extends JFrame{
 	public static int frameY = 700;
 	private Game game;
 	private Home home;
+	private Settings settings;
 	
 	public Frame() 
 	{
@@ -38,5 +39,20 @@ public class Frame extends JFrame{
 		add(home);
 		revalidate();
 		repaint();
+	}
+	
+	public void MoveToSettings() 
+	{
+		getContentPane().removeAll();
+		
+		settings = new Settings(this);
+		add(settings);
+		revalidate();
+		repaint();
+	}
+	
+	public Game getGame() 
+	{
+		return game;
 	}
 }

@@ -85,7 +85,7 @@ public class Game extends JPanel implements ActionListener{
     	super.paintComponent(g); 
     	g.drawImage(image.getImage(), 0, 0, Frame.frameX, Frame.frameY, null); // draw background image
     }
-	
+
 	public Box getFirstColorBox() {
 		return firstColorBox;
 	}

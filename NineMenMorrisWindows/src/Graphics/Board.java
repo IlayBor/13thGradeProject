@@ -98,9 +98,9 @@ public class Board extends JPanel{
     		if(isAllowedToBeRemoved(stone))
     		{
     			if(stone.getStoneColor() == Game.firstColor)
-    				logicGame.firstColorStonesLeft--;
+    				logicGame.setFirstColorStonesLeft(logicGame.getFirstColorStonesLeft() - 1);
     			else
-    				logicGame.secColorStonesLeft--;
+    				logicGame.setSecColorStonesLeft(logicGame.getSecColorStonesLeft() - 1);
     			
     			stone.removeStone();
     			logicBoard.setValue(stone.getRow(), stone.getCol(), null);
