@@ -10,15 +10,17 @@ public class Stone extends JPanel{
 	
 	private static int stoneSize = 50; // static variables
 	
-	public int row; // variables
-	public int col;
-	public boolean isPanelActive = false;
-	public boolean isAllowed = false;
-	public boolean isInTrio = false;
+	private int row; // variables
+	private int col;
+	
+	private boolean isPanelActive = false;
+	private boolean allowed = false;
+	private boolean inTrio = false;
 	private int stoneCenterX = 42;
 	private int stoneCenterY = 42;
-	public Color stoneColor = null;
-	public Color glowColor = Game.defaultIndicator;
+	
+	private Color stoneColor = null;
+	private Color glowColor = Game.defaultIndicator;
 	
 	private Board board; // the board
 	
@@ -36,24 +38,24 @@ public class Stone extends JPanel{
 		super.paintComponent(g);
 		if(stoneColor != null) // if there is a stone
 		{
-			g.setColor(isInTrio ? Game.trioColor : stoneColor); // drawing the placed stone
+			g.setColor(inTrio ? Game.trioColor : stoneColor); // drawing the placed stone
 	    	g.fillOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
 	    	
 	    	g.setColor(g.getColor().darker()); // normal border
 	    	g.drawOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
 	    	
-	    	if(!isInTrio) // not in trio, add glow.
+	    	if(!inTrio) // not in trio, add glow.
 	    	{
 	    		if(board.lastClickedStone == this) // last clicked glow
 		    	{
 			    	g.setColor(Game.specificGlowIndicatorColor); 
 			    	g.drawOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
 		    	}
-	    		if(board.game.isPlacingPhase) // placing phase
+	    		if(board.game.getPlacingPhase()) // placing phase
 	    		{
 	    			if(board.shouldRemoveStone) // remove phase
 	    			{
-	    				if(board.game.currentPlayerColor == stoneColor) // same color glow
+	    				if(board.game.getCurrentPlayerColor() == stoneColor) // same color glow
 	    		    	{
 	    		    		g.setColor(Game.globalGlowIndicatorColor);
 	    			    	g.drawOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
@@ -69,7 +71,7 @@ public class Stone extends JPanel{
 	    		{
 	    			if(board.shouldRemoveStone) // remove stage
 	    			{
-	    				if(board.game.currentPlayerColor == stoneColor) // same color glow
+	    				if(board.game.getCurrentPlayerColor() == stoneColor) // same color glow
 	    		    	{
 	    		    		g.setColor(Game.globalGlowIndicatorColor);
 	    			    	g.drawOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
@@ -82,7 +84,7 @@ public class Stone extends JPanel{
 	    			}
 	    			else
 	    			{
-	    				if(board.game.currentPlayerColor == stoneColor) // same color glow
+	    				if(board.game.getCurrentPlayerColor() == stoneColor) // same color glow
 				    	{
 				    		g.setColor(Game.globalGlowIndicatorColor);
 					    	g.drawOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
@@ -91,7 +93,7 @@ public class Stone extends JPanel{
 	    		}
 	    	}
 		}
-		else if(isAllowed) // no stone and move is allowed
+		else if(allowed) // no stone and move is allowed
 		{
 			g.setColor(Game.allowedColor); // mark place
 			g.fillOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
@@ -129,9 +131,9 @@ public class Stone extends JPanel{
 	{
 		public void mousePressed(MouseEvent e) 
 		{
-			if(board.game.isPlacingPhase && stoneColor == null && !board.shouldRemoveStone) // stone-placing phase, and there is no stone on the panel.
+			if(board.game.getPlacingPhase() && stoneColor == null && !board.shouldRemoveStone) // stone-placing phase, and there is no stone on the panel.
 			{
-				drawStone(board.game.currentPlayerColor);
+				drawStone(board.game.getCurrentPlayerColor());
 				board.stonePlaced(Stone.this);
 			}
 			else // stone-moving phase or clicked stone clicked on placing phase
@@ -141,6 +143,48 @@ public class Stone extends JPanel{
 		}
 	}
 	
+	
+	
+	public Color getStoneColor() {
+		return stoneColor;
+	}
+
+	public void setStoneColor(Color stoneColor) {
+		this.stoneColor = stoneColor;
+	}
+
+	public boolean getInTrio() {
+		return inTrio;
+	}
+
+	public void setInTrio(boolean isInTrio) {
+		this.inTrio = isInTrio;
+	}
+
+	public boolean getAllowed() {
+		return allowed;
+	}
+
+	public void setAllowed(boolean _Allowed) {
+		this.allowed = _Allowed;
+	}
+
+	public int getRow() {
+		return row;
+	}
+
+	public void setRow(int row) {
+		this.row = row;
+	}
+
+	public int getCol() {
+		return col;
+	}
+
+	public void setCol(int col) {
+		this.col = col;
+	}
+
 	public void setCenterValues() 
 	{
 		switch(row) 

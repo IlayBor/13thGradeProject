@@ -1,5 +1,6 @@
 package Graphics;
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -7,7 +8,6 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 public class Game extends JPanel implements ActionListener{
-	
 	public static Color firstColor = new Color(255,255,255,255); // game static colors
 	public static Color secColor = new Color(0,0,0,255); 
 	
@@ -22,18 +22,18 @@ public class Game extends JPanel implements ActionListener{
 	public static Color firstColorHover = new Color(255,255,255,180);
 	public static Color secColorHove = new Color(0,0,0,160);
 	
-	public Frame frame; // game visual variables
-	public Board board;
-	public Box firstColorBox;
-	public Box secColorBox;
-	public JButton homeButton;
-	public JButton resetButton;
+	private Frame frame; // game visual variables
+	private Board board;
+	private Box firstColorBox;
+	private Box secColorBox;
+	private JButton homeButton;
+	private JButton resetButton;
 	
-	public int playerTurn = 0; // game semi - logic variables
-	public Color currentPlayerColor = firstColor;
-	public boolean isPlacingPhase = true;
-	public int firstColorStonesLeft = 9;
-	public int secColorStonesLeft = 9;
+	private int playerTurn = 0; // game semi - logic variables
+	private Color currentPlayerColor = firstColor;
+	private boolean placingPhase = true;
+	private int firstColorStonesLeft = 9;
+	private int secColorStonesLeft = 9;
 	
 	public Game(Frame _frame) 
 	{
@@ -58,7 +58,7 @@ public class Game extends JPanel implements ActionListener{
 		add(homeButton);
 		
 		resetButton = new JButton("Reset");
-		resetButton.setBounds(900,0,100,50);
+		resetButton.setBounds(886,0,100,50);
 		resetButton.addActionListener(this);
 		add(resetButton);
 	}
@@ -75,6 +75,70 @@ public class Game extends JPanel implements ActionListener{
 		
 		if(e.getSource() == homeButton) 
 			frame.MoveToHome();
+	}	
+	
+	public Box getFirstColorBox() {
+		return firstColorBox;
+	}
+
+	public void setFirstColorBox(Box firstColorBox) {
+		this.firstColorBox = firstColorBox;
+	}
+
+	public Box getSecColorBox() {
+		return secColorBox;
+	}
+
+	public void setSecColorBox(Box secColorBox) {
+		this.secColorBox = secColorBox;
+	}
+
+	public int getPlayerTurn() {
+		return playerTurn;
+	}
+
+	public void setPlayerTurn(int playerTurn) {
+		this.playerTurn = playerTurn;
+	}
+
+	public boolean getPlacingPhase() {
+		return placingPhase;
+	}
+
+	public void setPlacingPhase(boolean isPlacingPhase) {
+		this.placingPhase = isPlacingPhase;
+	}
+
+	public int getFirstColorStonesLeft() {
+		return firstColorStonesLeft;
+	}
+
+	public void setFirstColorStonesLeft(int firstColorStonesLeft) {
+		this.firstColorStonesLeft = firstColorStonesLeft;
+	}
+
+	public int getSecColorStonesLeft() {
+		return secColorStonesLeft;
+	}
+
+	public void setSecColorStonesLeft(int secColorStonesLeft) {
+		this.secColorStonesLeft = secColorStonesLeft;
+	}
+
+	public Frame getFrame() {
+		return frame;
+	}
+
+	public void setFrame(Frame frame) {
+		this.frame = frame;
 	}
 	
+	public Color getCurrentPlayerColor() {
+		return currentPlayerColor;
+	}
+
+	public void setCurrentPlayerColor(Color currentPlayerColor) {
+		this.currentPlayerColor = currentPlayerColor;
+	}
+
 }

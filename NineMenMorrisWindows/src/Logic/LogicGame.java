@@ -37,14 +37,14 @@ public class LogicGame {
 	
 	public boolean isMoveAllowed(Stone lastStone, Stone nextStone) 
 	{	
-		if(lastStone.stoneColor == Game.firstColor && firstColorStonesLeft <= 3) // JUNK MOVES
+		if(lastStone.getStoneColor() == Game.firstColor && firstColorStonesLeft <= 3) // JUNK MOVES
 			return true;
-		if(lastStone.stoneColor == Game.secColor && secColorStonesLeft <= 3)
+		if(lastStone.getStoneColor() == Game.secColor && secColorStonesLeft <= 3)
 			return true;
 		
 		int allowedRowDis = 0;
 		int allowedColDis = 0;
-		switch(lastStone.row) 
+		switch(lastStone.getRow()) 
 		{
 		case 0,6:
 			allowedColDis = 3;
@@ -57,7 +57,7 @@ public class LogicGame {
 			break;
 		}
 		
-		switch(lastStone.col) 
+		switch(lastStone.getCol()) 
 		{
 		case 0,6:
 			allowedRowDis = 3;
@@ -70,9 +70,9 @@ public class LogicGame {
 			break;
 		}
 		
-		if(Math.abs(lastStone.row - nextStone.row) == allowedRowDis && lastStone.col - nextStone.col == 0)
+		if(Math.abs(lastStone.getRow() - nextStone.getRow()) == allowedRowDis && lastStone.getCol() - nextStone.getCol() == 0)
 			return true;
-		if(Math.abs(lastStone.col - nextStone.col) == allowedColDis && lastStone.row - nextStone.row == 0)
+		if(Math.abs(lastStone.getCol() - nextStone.getCol()) == allowedColDis && lastStone.getRow() - nextStone.getRow() == 0)
 			return true;
 		return false;
 	}
@@ -94,11 +94,11 @@ public class LogicGame {
 	
 	public ArrayList<LogicStone> checkRow(Stone stone) 
 	{
-		char charInLogic = stone.stoneColor == Game.firstColor ? LogicBoard.firstPlayerChar : LogicBoard.secPlayerChar;
-		int rowToCheck = stone.row;
+		char charInLogic = stone.getStoneColor() == Game.firstColor ? LogicBoard.firstPlayerChar : LogicBoard.secPlayerChar;
+		int rowToCheck = stone.getRow();
 		
-		int startCol = (rowToCheck == 3) ? stone.col < 3 ? 0 : 4 : 0;
-		int endCol = (rowToCheck == 3) ? stone.col < 3 ? 3 : 7: 7;
+		int startCol = (rowToCheck == 3) ? stone.getCol() < 3 ? 0 : 4 : 0;
+		int endCol = (rowToCheck == 3) ? stone.getCol() < 3 ? 3 : 7: 7;
 		ArrayList<LogicStone> logicStoneArr = new ArrayList<LogicStone>();
 		
 		for(int curCol = startCol; curCol < endCol; curCol++) 
@@ -111,11 +111,11 @@ public class LogicGame {
 	
 	public ArrayList<LogicStone> checkCol(Stone stone) 
 	{
-		char charInLogic = stone.stoneColor == Game.firstColor ? LogicBoard.firstPlayerChar : LogicBoard.secPlayerChar;
-		int colToCheck = stone.col;
+		char charInLogic = stone.getStoneColor() == Game.firstColor ? LogicBoard.firstPlayerChar : LogicBoard.secPlayerChar;
+		int colToCheck = stone.getCol();
 		
-		int startRow = (colToCheck == 3) ? stone.row < 3 ? 0 : 4 : 0;
-		int endRow = (colToCheck == 3) ? stone.row < 3 ? 3 : 7: 7;
+		int startRow = (colToCheck == 3) ? stone.getRow() < 3 ? 0 : 4 : 0;
+		int endRow = (colToCheck == 3) ? stone.getRow() < 3 ? 3 : 7: 7;
 		
 		ArrayList<LogicStone> logicStoneArr = new ArrayList<LogicStone>();
 		

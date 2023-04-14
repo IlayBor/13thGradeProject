@@ -64,23 +64,23 @@ public class Board extends JPanel{
     
     public void stonePlaced(Stone stone) // stone placing phase
 	{	
-		if(game.playerTurn == 0) 
+		if(game.getPlayerTurn() == 0) 
 		{
-			game.firstColorStonesLeft--;
-			game.firstColorBox.repaint();
+			game.setFirstColorStonesLeft(game.getFirstColorStonesLeft()-1);
+			game.getFirstColorBox().repaint();
 		}
 		else 
 		{
-			game.secColorStonesLeft--;
-			game.secColorBox.repaint();
+			game.setSecColorStonesLeft(game.getSecColorStonesLeft()-1);
+			game.getSecColorBox().repaint();
 		}
 		
-		logicBoard.setValue(stone.row, stone.col, game.currentPlayerColor);
+		logicBoard.setValue(stone.getRow(), stone.getCol(), game.getCurrentPlayerColor());
 		
 		checkAndMarkForTrio(stone);
 		
-		if(game.firstColorStonesLeft == 0 && game.secColorStonesLeft == 0) // end stone placing phase
-			game.isPlacingPhase = false;
+		if(game.getFirstColorStonesLeft() == 0 && game.getSecColorStonesLeft() == 0) // end stone placing phase
+			game.setPlacingPhase(false);
 		
 		if(!shouldRemoveStone)
 			game.changeTurn();
@@ -97,13 +97,13 @@ public class Board extends JPanel{
     	{
     		if(isAllowedToBeRemoved(stone))
     		{
-    			if(stone.stoneColor == Game.firstColor)
+    			if(stone.getStoneColor() == Game.firstColor)
     				logicGame.firstColorStonesLeft--;
     			else
     				logicGame.secColorStonesLeft--;
     			
     			stone.removeStone();
-    			logicBoard.setValue(stone.row, stone.col, null);
+    			logicBoard.setValue(stone.getRow(), stone.getCol(), null);
     			 
     			checkForWinner();
     			
@@ -112,21 +112,21 @@ public class Board extends JPanel{
     			game.changeTurn();
     		}
     	}
-    	else if(!game.isPlacingPhase) // moving phase
+    	else if(!game.getPlacingPhase()) // moving phase
     	{
     		unmarkAllowedMoves();
-    		if(stone.stoneColor != null && stone.stoneColor == game.currentPlayerColor) // "copy" stone
+    		if(stone.getStoneColor() != null && stone.getStoneColor() == game.getCurrentPlayerColor()) // "copy" stone
         	{
         		lastClickedStone = stone;
         		markAllowedMoves(stone);
         	}
-        	else if(stone.stoneColor == null && lastClickedStone != null && logicGame.isMoveAllowed(lastClickedStone, stone))// "paste" stone
+        	else if(stone.getStoneColor() == null && lastClickedStone != null && logicGame.isMoveAllowed(lastClickedStone, stone))// "paste" stone
         	{	
-    			stone.drawStone(lastClickedStone.stoneColor);
-    			logicBoard.setValue(stone.row, stone.col, stone.stoneColor);
+    			stone.drawStone(lastClickedStone.getStoneColor());
+    			logicBoard.setValue(stone.getRow(), stone.getCol(), stone.getStoneColor());
     			
         		lastClickedStone.removeStone();
-        		logicBoard.setValue(lastClickedStone.row, lastClickedStone.col, null);
+        		logicBoard.setValue(lastClickedStone.getRow(), lastClickedStone.getCol(), null);
         		
         		lastClickedStone = null;
         		
@@ -146,22 +146,22 @@ public class Board extends JPanel{
     
     public void checkForWinner() 
     {
-    	if(logicGame.isWinner(game.currentPlayerColor))
+    	if(logicGame.isWinner(game.getCurrentPlayerColor()))
 		{
-			javax.swing.JOptionPane.showMessageDialog(null, "Player " + (game.playerTurn+1) + " Won!");
-			game.frame.MoveToHome();
+			javax.swing.JOptionPane.showMessageDialog(null, "Player " + (game.getPlayerTurn()+1) + " Won!");
+			game.getFrame().MoveToHome();
 		}
     }
     
     public boolean isAllowedToBeRemoved(Stone stone) 
     {
-    	return stone.stoneColor != null && stone.stoneColor != game.currentPlayerColor && !logicGame.isStoneInTrio(stone);
+    	return stone.getStoneColor() != null && stone.getStoneColor() != game.getCurrentPlayerColor() && !logicGame.isStoneInTrio(stone);
     }
     
     public boolean canRemoveAnyStone(Color color)
     {
     	for(int duoIndex = 0; duoIndex < allowedColArr.length; duoIndex++) 
-    		if(stoneArr[allowedRowArr[duoIndex]][allowedColArr[duoIndex]].stoneColor == color && !logicGame.isStoneInTrio(stoneArr[allowedRowArr[duoIndex]][allowedColArr[duoIndex]])) // right color and can remove
+    		if(stoneArr[allowedRowArr[duoIndex]][allowedColArr[duoIndex]].getStoneColor() == color && !logicGame.isStoneInTrio(stoneArr[allowedRowArr[duoIndex]][allowedColArr[duoIndex]])) // right color and can remove
     			return true;
     	return false;
     }
@@ -169,7 +169,7 @@ public class Board extends JPanel{
     public void checkAndMarkForTrio(Stone stone) 
     {
     	ArrayList<LogicStone> logicStoneArr = logicGame.checkCol(stone);
-    	if(canRemoveAnyStone(stone.stoneColor == game.firstColor ? game.secColor : game.firstColor)) // will mark and allow to remove only if you CAN remove 
+    	if(canRemoveAnyStone(stone.getStoneColor() == game.firstColor ? game.secColor : game.firstColor)) // will mark and allow to remove only if you CAN remove 
     	{
     		if(logicStoneArr != null) // checking cols first
         	{
@@ -193,7 +193,7 @@ public class Board extends JPanel{
     	for(int i = 0; i < logicStoneArr.size(); i++) 
 		{
 			LogicStone logicStone = logicStoneArr.get(i);
-			stoneArr[logicStone.row][logicStone.col].isInTrio = true;
+			stoneArr[logicStone.row][logicStone.col].setInTrio(true);
 			stoneArr[logicStone.row][logicStone.col].repaint();
 		}
     }
@@ -201,7 +201,7 @@ public class Board extends JPanel{
     public void unmarkTrio() 
     {
     	for(int duoIndex = 0; duoIndex < allowedColArr.length; duoIndex++) 
-    		stoneArr[allowedRowArr[duoIndex]][allowedColArr[duoIndex]].isInTrio = false;
+    		stoneArr[allowedRowArr[duoIndex]][allowedColArr[duoIndex]].setInTrio(false);
     }
     
     public void markAllowedMoves(Stone stone) 
@@ -211,14 +211,14 @@ public class Board extends JPanel{
     	for(int i = 0; i < allowedMovesArr.size(); i++) 
 		{
 			LogicStone logicStone = allowedMovesArr.get(i);
-			stoneArr[logicStone.row][logicStone.col].isAllowed = true;
+			stoneArr[logicStone.row][logicStone.col].setAllowed(true);
 		}
     }
     
     public void unmarkAllowedMoves() 
     {
     	for(int duoIndex = 0; duoIndex < allowedColArr.length; duoIndex++) 
-    		stoneArr[allowedRowArr[duoIndex]][allowedColArr[duoIndex]].isAllowed = false;
+    		stoneArr[allowedRowArr[duoIndex]][allowedColArr[duoIndex]].setAllowed(false);
     }
     
     public void repaintAllPanels() 

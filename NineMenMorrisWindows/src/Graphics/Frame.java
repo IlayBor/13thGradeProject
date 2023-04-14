@@ -4,15 +4,15 @@ import javax.swing.JFrame;
 public class Frame extends JFrame{
 	public static int frameX = 1000; // frame size
 	public static int frameY = 700;
-	public Game game;
-	public Home home;
+	private Game game;
+	private Home home;
 	
 	public Frame() 
 	{
 		setTitle("Nine Men's Morris");
 		
-		game = new Game(this);
-		add(game);
+		home = new Home(this);
+		add(home);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(frameX, frameY);
@@ -32,8 +32,6 @@ public class Frame extends JFrame{
 	
 	public void MoveToHome() 
 	{
-		//game.ResetGame();
-		
 		getContentPane().removeAll();
 		
 		home = new Home(this);
