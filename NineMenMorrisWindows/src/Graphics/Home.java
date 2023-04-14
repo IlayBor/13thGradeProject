@@ -52,6 +52,10 @@ public class Home extends JPanel implements ActionListener{
 		{
 			frame.MoveToSettings();
 		}
+		if(e.getSource() == rulesButton) 
+		{
+			frame.MoveToRules();
+		}
 	}
 	
 	@Override

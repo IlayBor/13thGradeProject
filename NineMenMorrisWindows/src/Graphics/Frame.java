@@ -7,6 +7,7 @@ public class Frame extends JFrame{
 	private Game game;
 	private Home home;
 	private Settings settings;
+	private Rules rules;
 	
 	public Frame() 
 	{
@@ -47,6 +48,16 @@ public class Frame extends JFrame{
 		
 		settings = new Settings(this);
 		add(settings);
+		revalidate();
+		repaint();
+	}
+	
+	public void MoveToRules() 
+	{
+		getContentPane().removeAll();
+		
+		rules = new Rules(this);
+		add(rules);
 		revalidate();
 		repaint();
 	}
