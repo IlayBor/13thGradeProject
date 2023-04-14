@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -18,7 +19,6 @@ public class Game extends JPanel implements ActionListener{
 	
 	public static Color allowedColor = Color.MAGENTA; 
 	public static Color trioColor = Color.green; 
-	//private static Color moveIndicatorColor = new Color(0,247,247,200);
 	public static Color firstColorHover = new Color(255,255,255,180);
 	public static Color secColorHove = new Color(0,0,0,160);
 	
@@ -28,8 +28,9 @@ public class Game extends JPanel implements ActionListener{
 	private Box secColorBox;
 	private JButton homeButton;
 	private JButton resetButton;
+	private ImageIcon image;
 	
-	private int playerTurn = 0; // game semi - logic variables
+	private int playerTurn = 0; // game logic variables
 	private Color currentPlayerColor = firstColor;
 	private boolean placingPhase = true;
 	private int firstColorStonesLeft = 9;
@@ -39,6 +40,8 @@ public class Game extends JPanel implements ActionListener{
 	{
 		frame = _frame;
 		setLayout(null);
+		
+		image = new ImageIcon("images/WoodenBackground.jpg");
 		
 		board = new Board(this);
 		board.setBounds(Frame.frameX/2-Board.boardX/2 , 0, Board.boardX,Board.boardY );
@@ -76,6 +79,12 @@ public class Game extends JPanel implements ActionListener{
 		if(e.getSource() == homeButton) 
 			frame.MoveToHome();
 	}	
+	
+	protected void paintComponent(Graphics g) 
+    {
+    	super.paintComponent(g); 
+    	g.drawImage(image.getImage(), 0, 0, Frame.frameX, Frame.frameY, null); // draw background image
+    }
 	
 	public Box getFirstColorBox() {
 		return firstColorBox;
