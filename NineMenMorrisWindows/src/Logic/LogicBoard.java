@@ -15,7 +15,6 @@ public class LogicBoard {
 	
 	public char LBoard[][] = new char[7][7];
 	
-	
 	public LogicBoard()
 	{
 		initBoard(initChar);

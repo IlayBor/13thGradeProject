@@ -19,8 +19,6 @@ public class Game extends JPanel implements ActionListener{
 	
 	public static Color allowedColor = Color.MAGENTA; 
 	public static Color trioColor = Color.green; 
-	public static Color firstColorHover = new Color(255,255,255,180);
-	public static Color secColorHove = new Color(0,0,0,160);
 	
 	private Frame frame; // game visual variables
 	private Board board;

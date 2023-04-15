@@ -143,8 +143,6 @@ public class Stone extends JPanel{
 		}
 	}
 	
-	
-	
 	public Color getStoneColor() {
 		return stoneColor;
 	}

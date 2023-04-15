@@ -18,10 +18,10 @@ import Logic.LogicStone;
 
 public class Board extends JPanel{
 	
-	public static int allowedRowArr[] = {0,0,0,1,1,1,2,2,2,3,3,3,3,3,3,4,4,4,5,5,5,6,6,6}; // allowed row places
-	public static int allowedColArr[] = {0,3,6,1,3,5,2,3,4,0,1,2,4,5,6,2,3,4,1,3,5,0,3,6}; // allowed col places
+	public static int allowedRowArr[] = {0,0,0,1,1,1,2,2,2,3,3,3,3,3,3,4,4,4,5,5,5,6,6,6};
+	public static int allowedColArr[] = {0,3,6,1,3,5,2,3,4,0,1,2,4,5,6,2,3,4,1,3,5,0,3,6};
 	
-	public static ImageIcon image; // board background & size
+	public static ImageIcon image;
 	public static int boardX = 650;
 	public static int boardY = 650;
 	
@@ -44,7 +44,7 @@ public class Board extends JPanel{
         
     }
     
-    void setupStoneMatrix() 
+    public void setupStoneMatrix() 
     {
     	for(int i = 0; i < 7; i++) 
     	{
