@@ -148,7 +148,8 @@ public class Board extends JPanel{
     {
     	if(logicGame.isWinner(game.getCurrentPlayerColor()))
 		{
-			javax.swing.JOptionPane.showMessageDialog(null, "Player " + (game.getPlayerTurn()+1) + " Won!");
+    		String color = game.getCurrentPlayerColor() == Game.firstColor ? "White" : "Black";
+			javax.swing.JOptionPane.showMessageDialog(null, color + " Won!");
 			game.getFrame().MoveToHome();
 		}
     }

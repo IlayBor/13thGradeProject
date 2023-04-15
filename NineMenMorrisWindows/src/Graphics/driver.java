@@ -1,10 +1,7 @@
-import Graphics.Frame;
+package Graphics;
 
-public class main2 {
-
+public class driver {
 	public static void main(String[] args) {
 		Frame f = new Frame();
-
 	}
-
 }
