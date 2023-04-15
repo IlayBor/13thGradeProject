@@ -36,69 +36,44 @@ public class Stone extends JPanel{
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		if(stoneColor != null) // if there is a stone
+		if(stoneColor != null) // If there is a stone
 		{
-			g.setColor(inTrio ? Game.trioColor : stoneColor); // drawing the placed stone
+			g.setColor(inTrio ? Game.trioColor : stoneColor); // Draw Stone
 	    	g.fillOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
 	    	
-	    	g.setColor(g.getColor().darker()); // normal border
-	    	g.drawOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
+	    	g.setColor(g.getColor().darker()); // Normal border
 	    	
-	    	if(!inTrio) // not in trio, add glow.
+	    	if(!inTrio) // Add glow.
 	    	{
-	    		if(board.lastClickedStone == this) // last clicked glow
-		    	{
+	    		if(board.lastClickedStone == this) // Last clicked (Focused) glow
 			    	g.setColor(Game.specificGlowIndicatorColor); 
-			    	g.drawOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
-		    	}
-	    		if(board.game.getPlacingPhase()) // placing phase
+	    		
+	    		if(board.game.getPlacingPhase()) // Placing phase
 	    		{
-	    			if(board.shouldRemoveStone) // remove phase
-	    			{
-	    				if(board.game.getCurrentPlayerColor() == stoneColor) // same color glow
-	    		    	{
-	    		    		g.setColor(Game.globalGlowIndicatorColor);
-	    			    	g.drawOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
-	    		    	}
-	    				else // remove glow
-	    				{
+	    			if(board.shouldRemoveStone)
+	    				if(board.game.getCurrentPlayerColor() != stoneColor) // Enemy (to remove) color glow
 	    					g.setColor(Game.removeGlowIndicatorColor);
-	    			    	g.drawOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
-	    				}
-	    			}
 	    		}
-	    		else // moving phase
+	    		else // Moving phase
 	    		{
-	    			if(board.shouldRemoveStone) // remove stage
+	    			if(board.shouldRemoveStone)
 	    			{
-	    				if(board.game.getCurrentPlayerColor() == stoneColor) // same color glow
-	    		    	{
-	    		    		g.setColor(Game.globalGlowIndicatorColor);
-	    			    	g.drawOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
-	    		    	}
-	    				else // remove glow
-	    				{
+	    				if(board.game.getCurrentPlayerColor() != stoneColor) // Enemy (to remove) color glow
 	    					g.setColor(Game.removeGlowIndicatorColor);
-	    			    	g.drawOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
-	    				}
 	    			}
 	    			else
-	    			{
-	    				if(board.game.getCurrentPlayerColor() == stoneColor) // same color glow
-				    	{
-				    		g.setColor(Game.globalGlowIndicatorColor);
-					    	g.drawOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
-				    	}
-	    			}
+	    				if(board.game.getCurrentPlayerColor() == stoneColor) // Same color glow (possible stones) 
+	    					g.setColor(Game.globalGlowIndicatorColor);
 	    		}
 	    	}
+	    	g.drawOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
 		}
-		else if(allowed) // no stone and move is allowed
+		else if(allowed) // Possible allowed next move
 		{
-			g.setColor(Game.allowedColor); // mark place
+			g.setColor(Game.allowedColor); // Mark place
 			g.fillOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
 			
-			g.setColor(g.getColor().darker()); // normal border
+			g.setColor(g.getColor().darker()); // Normal border
 	    	g.drawOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
 		}
 	}
