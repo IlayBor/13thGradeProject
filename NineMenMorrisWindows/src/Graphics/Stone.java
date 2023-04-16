@@ -45,24 +45,24 @@ public class Stone extends JPanel{
 	    	
 	    	if(!inTrio) // Add glow
 	    	{
-	    		if(board.lastClickedStone == this) // Last clicked (Focused) glow
+	    		if(board.getLastClickedStone() == this) // Last clicked (Focused) glow
 			    	g.setColor(Game.specificGlowIndicatorColor); 
 	    		
-	    		if(board.game.getPlacingPhase()) // Placing phase
+	    		if(board.getGame().getPlacingPhase()) // Placing phase
 	    		{
-	    			if(board.shouldRemoveStone)
-	    				if(board.game.getCurrentPlayerColor() != stoneColor) // Enemy (to remove) color glow
+	    			if(board.getIsShouldRemoveStone())
+	    				if(board.getGame().getCurrentPlayerColor() != stoneColor) // Enemy (to remove) color glow
 	    					g.setColor(Game.removeGlowIndicatorColor);
 	    		}
 	    		else // Moving phase
 	    		{
-	    			if(board.shouldRemoveStone)
+	    			if(board.getIsShouldRemoveStone())
 	    			{
-	    				if(board.game.getCurrentPlayerColor() != stoneColor) // Enemy (to remove) color glow
+	    				if(board.getGame().getCurrentPlayerColor() != stoneColor) // Enemy (to remove) color glow
 	    					g.setColor(Game.removeGlowIndicatorColor);
 	    			}
 	    			else
-	    				if(board.game.getCurrentPlayerColor() == stoneColor) // Same color glow (possible stones) 
+	    				if(board.getGame().getCurrentPlayerColor() == stoneColor) // Same color glow (possible stones) 
 	    					g.setColor(Game.globalGlowIndicatorColor);
 	    		}
 	    	}
@@ -106,9 +106,9 @@ public class Stone extends JPanel{
 	{
 		public void mousePressed(MouseEvent e) 
 		{
-			if(board.game.getPlacingPhase() && stoneColor == null && !board.shouldRemoveStone) // stone-placing phase, and there is no stone on the panel.
+			if(board.getGame().getPlacingPhase() && stoneColor == null && !board.getIsShouldRemoveStone()) // stone-placing phase, and there is no stone on the panel.
 			{
-				drawStone(board.game.getCurrentPlayerColor());
+				drawStone(board.getGame().getCurrentPlayerColor());
 				board.stonePlaced(Stone.this);
 			}
 			else // stone-moving phase or clicked stone clicked on placing phase

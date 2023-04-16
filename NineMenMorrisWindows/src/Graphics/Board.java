@@ -25,12 +25,12 @@ public class Board extends JPanel{
 	public static int boardX = 650;
 	public static int boardY = 650;
 	
-	public Game game;
-	public LogicBoard logicBoard = new LogicBoard();
-	public LogicGame logicGame = new LogicGame(logicBoard, this);
-	public Stone stoneArr[][] = new Stone[7][7];
-	public Stone lastClickedStone = null;
-	public boolean shouldRemoveStone = false;
+	private Game game;
+	private LogicBoard logicBoard = new LogicBoard();
+	private LogicGame logicGame = new LogicGame(logicBoard, this);
+	private Stone stoneArr[][] = new Stone[7][7];
+	private Stone lastClickedStone = null;
+	private boolean shouldRemoveStone = false;
 	
     public Board(Game _game) {
     	game = _game;
@@ -87,7 +87,7 @@ public class Board extends JPanel{
 		
 		repaintAllPanels();
 		
-		logicGame.getLogicBoard().printLBoard();
+		//logicGame.getLogicBoard().printLBoard();
 	}
     
     public void stoneClicked(Stone stone)
@@ -233,6 +233,23 @@ public class Board extends JPanel{
     	super.paintComponent(g); 
     	g.drawImage(image.getImage(), 0, 0, boardX, boardY, null); // draw background
     }
+
+	public Game getGame() {
+		return game;
+	}
+
+	public Stone[][] getStoneArr() {
+		return stoneArr;
+	}
+
+	public Stone getLastClickedStone() {
+		return lastClickedStone;
+	}
+
+	public boolean getIsShouldRemoveStone() {
+		return shouldRemoveStone;
+	}
+    
     
     
 }
