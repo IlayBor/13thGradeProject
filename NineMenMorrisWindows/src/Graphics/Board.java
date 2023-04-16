@@ -87,8 +87,7 @@ public class Board extends JPanel{
 		
 		repaintAllPanels();
 		
-		//logicGame.LBoard.printLBoard();
-		//logicGame.printAllMoves(logicGame.allPossibleStonePlaces(game.currentPlayerColor));
+		logicGame.getLogicBoard().printLBoard();
 	}
     
     public void stoneClicked(Stone stone)
@@ -194,8 +193,8 @@ public class Board extends JPanel{
     	for(int i = 0; i < logicStoneArr.size(); i++) 
 		{
 			LogicStone logicStone = logicStoneArr.get(i);
-			stoneArr[logicStone.row][logicStone.col].setInTrio(true);
-			stoneArr[logicStone.row][logicStone.col].repaint();
+			stoneArr[logicStone.getRow()][logicStone.getCol()].setInTrio(true);
+			stoneArr[logicStone.getRow()][logicStone.getCol()].repaint();
 		}
     }
     
@@ -212,7 +211,7 @@ public class Board extends JPanel{
     	for(int i = 0; i < allowedMovesArr.size(); i++) 
 		{
 			LogicStone logicStone = allowedMovesArr.get(i);
-			stoneArr[logicStone.row][logicStone.col].setAllowed(true);
+			stoneArr[logicStone.getRow()][logicStone.getCol()].setAllowed(true);
 		}
     }
     

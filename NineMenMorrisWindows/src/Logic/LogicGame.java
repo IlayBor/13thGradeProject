@@ -166,7 +166,7 @@ public class LogicGame {
 		for(int i = 0; i < possibleMoves.size(); i++) 
 		{
 			LogicStone logicStone = possibleMoves.get(i);
-			System.out.println("Row:" + logicStone.row + " Col:" + logicStone.col);
+			System.out.println("Row:" + logicStone.getRow() + " Col:" + logicStone.getCol());
 		}
 		System.out.print("size: ");
 		System.out.println(possibleMoves.size());
@@ -188,4 +188,7 @@ public class LogicGame {
 		this.secColorStonesLeft = secColorStonesLeft;
 	}
 
+	public LogicBoard getLogicBoard() {
+		return logicBoard;
+	}	
 }

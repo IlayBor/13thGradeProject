@@ -88,24 +88,12 @@ public class Game extends JPanel implements ActionListener{
 		return firstColorBox;
 	}
 
-	public void setFirstColorBox(Box firstColorBox) {
-		this.firstColorBox = firstColorBox;
-	}
-
 	public Box getSecColorBox() {
 		return secColorBox;
 	}
 
-	public void setSecColorBox(Box secColorBox) {
-		this.secColorBox = secColorBox;
-	}
-
 	public int getPlayerTurn() {
 		return playerTurn;
-	}
-
-	public void setPlayerTurn(int playerTurn) {
-		this.playerTurn = playerTurn;
 	}
 
 	public boolean getPlacingPhase() {
@@ -135,17 +123,8 @@ public class Game extends JPanel implements ActionListener{
 	public Frame getFrame() {
 		return frame;
 	}
-
-	public void setFrame(Frame frame) {
-		this.frame = frame;
-	}
 	
 	public Color getCurrentPlayerColor() {
 		return currentPlayerColor;
 	}
-
-	public void setCurrentPlayerColor(Color currentPlayerColor) {
-		this.currentPlayerColor = currentPlayerColor;
-	}
-
 }

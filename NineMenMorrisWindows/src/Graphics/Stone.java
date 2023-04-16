@@ -43,7 +43,7 @@ public class Stone extends JPanel{
 	    	
 	    	g.setColor(g.getColor().darker()); // Normal border
 	    	
-	    	if(!inTrio) // Add glow.
+	    	if(!inTrio) // Add glow
 	    	{
 	    		if(board.lastClickedStone == this) // Last clicked (Focused) glow
 			    	g.setColor(Game.specificGlowIndicatorColor); 
@@ -122,20 +122,8 @@ public class Stone extends JPanel{
 		return stoneColor;
 	}
 
-	public void setStoneColor(Color stoneColor) {
-		this.stoneColor = stoneColor;
-	}
-
-	public boolean getInTrio() {
-		return inTrio;
-	}
-
 	public void setInTrio(boolean isInTrio) {
 		this.inTrio = isInTrio;
-	}
-
-	public boolean getAllowed() {
-		return allowed;
 	}
 
 	public void setAllowed(boolean _Allowed) {
@@ -146,16 +134,8 @@ public class Stone extends JPanel{
 		return row;
 	}
 
-	public void setRow(int row) {
-		this.row = row;
-	}
-
 	public int getCol() {
 		return col;
-	}
-
-	public void setCol(int col) {
-		this.col = col;
 	}
 
 	public void setCenterValues() 
