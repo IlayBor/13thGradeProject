@@ -6,19 +6,20 @@ import java.util.ArrayList;
 import Graphics.Game;
 
 public class AI {
-	private LogicGame logicGameCopy;
+	public static int aiLevel = 0; // 0 - None, 1 - Easy, 2 - Medium, 3 - Hard
+	private LogicGame logicGame;
 
 	public AI(LogicGame logicGame) {
-		this.logicGameCopy = logicGame;
+		this.logicGame = logicGame;
 	}
 	
-	public int evaluate(Color color) {
-	    int playerPieces = color == Game.firstColor ? logicGameCopy.getFirstColorStonesLeft() : logicGameCopy.getSecColorStonesLeft();
-	    int opponentPieces = color == Game.firstColor ? logicGameCopy.getSecColorStonesLeft() : logicGameCopy.getFirstColorStonesLeft();
-	    int playerMoves = logicGameCopy.allPossibleMoves(color).size();
-	    int opponentMoves = logicGameCopy.allPossibleMoves(color == Game.firstColor ? Game.secColor : Game.firstColor).size();
-	    int playerMills = logicGameCopy.countTrios(color);
-	    int opponentMills = logicGameCopy.countTrios(color == Game.firstColor ? Game.secColor : Game.firstColor);
+	public int evaluateGame(LogicGame futureLogicGame, Color color) {
+	    int playerPieces = color == Game.firstColor ? futureLogicGame.getFirstColorStonesLeft() : futureLogicGame.getSecColorStonesLeft();
+	    int opponentPieces = color == Game.firstColor ? futureLogicGame.getSecColorStonesLeft() : futureLogicGame.getFirstColorStonesLeft();
+	    int playerMoves = futureLogicGame.allPossibleMoves(color).size();
+	    int opponentMoves = futureLogicGame.allPossibleMoves(color == Game.firstColor ? Game.secColor : Game.firstColor).size();
+	    int playerMills = futureLogicGame.countTrios(color);
+	    int opponentMills = futureLogicGame.countTrios(color == Game.firstColor ? Game.secColor : Game.firstColor);
 	    
 	    int score = 0;
 	    
@@ -36,11 +37,27 @@ public class AI {
 	
 	public void getBestMove(Color color) 
 	{
-		ArrayList<LogicStone> possibleMoves = logicGameCopy.allPossibleMoves(color);
-		LogicStone maxStone = possibleMoves.get(0);
+		LogicBoard prevBoard = new LogicBoard(logicGame.getLogicBoard());
+		ArrayList<LogicStone> possibleMoves = logicGame.allPossibleMoves(color);
 		
-		int maxScore;
+		LogicStone bestMove = possibleMoves.get(0);
+		logicGame.getLogicBoard().setStoneColor(bestMove.getRow(), bestMove.getCol(), color);
+		int maxScore = evaluateGame(color);
 		
+		for(int i = 1; i < possibleMoves.size(); i++) 
+		{
+			logicGame.setLogicBoard(prevBoard);
+			
+			LogicStone curMove = possibleMoves.get(i);
+			logicGame.getLogicBoard().setStoneColor(curMove.getRow(), curMove.getCol(), color);
+			int curScore = evaluateGame(color);
+			
+			if(curScore > maxScore)
+				bestMove = curMove;
+		}
 		
+		logicGame.setLogicBoard(prevBoard);
+		
+		System.out.printf("Best move is to row:%d col:%d \n", bestMove.getRow(), bestMove.getCol());
 	}
 }

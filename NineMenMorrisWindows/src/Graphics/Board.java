@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import Logic.LogicBoard;
 import Logic.LogicGame;
 import Logic.LogicStone;
+import Logic.AI;
 
 public class Board extends JPanel{
 	
@@ -27,6 +28,7 @@ public class Board extends JPanel{
 	
 	private Game game;
 	private LogicGame logicGame = new LogicGame();
+	private AI Ai = new AI(logicGame);
 	private Stone stoneArr[][] = new Stone[7][7];
 	private Stone lastClickedStone = null;
 	private boolean shouldRemoveStone = false;
@@ -82,8 +84,6 @@ public class Board extends JPanel{
 			game.changeTurn();
 		
 		repaintAllPanels();
-		
-		//logicGame.getLogicBoard().printLBoard();
 	}
     
     public void stoneClicked(Stone stone) // stone Moving / Removing Phase.
@@ -109,6 +109,8 @@ public class Board extends JPanel{
     	}
     	else if(!game.getPlacingPhase()) // moving phase
     	{
+    		//Ai.getBestMove(game.getCurrentPlayerColor());
+    		
     		unmarkAllowedMoves();
     		if(stone.getColor() != null && stone.getColor() == game.getCurrentPlayerColor()) // "copy" stone
         	{
@@ -135,8 +137,6 @@ public class Board extends JPanel{
     	}
     	
     	repaintAllPanels();
-    	//logicGame.LBoard.printLBoard();
-		//logicGame.printAllMoves(logicGame.allPossibleMoves(game.currentPlayerColor));
     }
     
     public void checkForWinner() 

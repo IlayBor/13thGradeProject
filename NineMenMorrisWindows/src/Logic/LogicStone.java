@@ -21,6 +21,13 @@ public class LogicStone {
 		color = toCopy.getColor();
 	}
 	
+	public LogicStone(LogicStone toCopy) 
+	{
+		row = toCopy.getRow();
+		col = toCopy.getCol();
+		color = toCopy.getColor();
+	}
+	
 	public int getRow() {
 		return row;
 	}

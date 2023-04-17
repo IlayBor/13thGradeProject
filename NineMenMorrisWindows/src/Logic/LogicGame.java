@@ -7,9 +7,7 @@ import Graphics.Board;
 import Graphics.Game;
 import Graphics.Stone;
 
-public class LogicGame {
-	public static int aiLevel = 0; // 0 - None, 1 - Easy, 2 - Medium, 3 - Hard
-	
+public class LogicGame {	
 	private LogicBoard logicBoard; 
 	
 	private int firstColorStonesLeft = 9;
@@ -18,6 +16,11 @@ public class LogicGame {
 	public LogicGame() 
 	{
 		logicBoard = new LogicBoard();
+	}
+
+	public LogicGame(LogicBoard logicBoard) 
+	{
+		this.logicBoard = logicBoard;
 	}
 	
 	public boolean isMoveAllowed(LogicStone lastStone, LogicStone nextStone) 
@@ -147,6 +150,7 @@ public class LogicGame {
 	{
 		ArrayList<LogicStone> possibleMoves = new ArrayList<LogicStone>();
 		
+		System.out.println("---------------------------");
 		for(int duoIndex = 0; duoIndex < Board.allowedColArr.length; duoIndex++) 
     	{
 			if(logicBoard.getBoard()[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]].getColor() == curColor) 
@@ -213,5 +217,11 @@ public class LogicGame {
 
 	public LogicBoard getLogicBoard() {
 		return logicBoard;
-	}	
+	}
+
+	public void setLogicBoard(LogicBoard logicBoard) {
+		this.logicBoard = logicBoard;
+	}
+	
+	
 }

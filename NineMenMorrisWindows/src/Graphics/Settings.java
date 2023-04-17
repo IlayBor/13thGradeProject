@@ -16,6 +16,7 @@ import javax.swing.JComboBox;
 
 import org.w3c.dom.Text;
 
+import Logic.AI;
 import Logic.LogicGame;
 
 public class Settings extends JPanel implements ActionListener{
@@ -55,7 +56,7 @@ public class Settings extends JPanel implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == comboBox) 
 		{
-			LogicGame.aiLevel = comboBox.getSelectedIndex();
+			AI.aiLevel = comboBox.getSelectedIndex();
 		}
 		if(e.getSource() == backButton)
 		{

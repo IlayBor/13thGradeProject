@@ -23,6 +23,13 @@ public class LogicBoard {
 		initBoard();
 	}
 	
+	public LogicBoard(LogicBoard toCopy) 
+	{
+		initBoard();
+		for(int duoIndex = 0; duoIndex < allowedColArr.length; duoIndex++) 
+    		board[allowedRowArr[duoIndex]][allowedColArr[duoIndex]] = new LogicStone(toCopy.getBoard()[allowedRowArr[duoIndex]][allowedColArr[duoIndex]]);
+	}
+	
 	public void initBoard() 
 	{
     	for(int duoIndex = 0; duoIndex < allowedColArr.length; duoIndex++) 
@@ -63,12 +70,5 @@ public class LogicBoard {
 
 	public LogicStone[][] getBoard() {
 		return board;
-	}
-
-	public void setBoard(LogicStone[][] board) {
-		this.board = board;
-	}
-	
-	
-	
+	}	
 }
