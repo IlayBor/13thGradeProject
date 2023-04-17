@@ -10,16 +10,14 @@ import Graphics.Stone;
 public class LogicGame {
 	public static int aiLevel = 0; // 0 - None, 1 - Easy, 2 - Medium, 3 - Hard
 	
-	private Board GraphicsBoard;
 	private LogicBoard logicBoard; 
 	
 	private int firstColorStonesLeft = 9;
 	private int secColorStonesLeft = 9;
 	
-	public LogicGame(LogicBoard _LBoard, Board _GraphicsBoard) 
+	public LogicGame() 
 	{
-		logicBoard = _LBoard;
-		GraphicsBoard = _GraphicsBoard;
+		logicBoard = new LogicBoard();
 	}
 	
 	public boolean isMoveAllowed(LogicStone lastStone, LogicStone nextStone) 
@@ -64,24 +62,23 @@ public class LogicGame {
 		return false;
 	}
 	
-	public ArrayList<LogicStone> allowedMoves(Stone stone)
+	public ArrayList<LogicStone> allowedMoves(LogicStone stone)
 	{
 		ArrayList<LogicStone> allowedMovesArr = new ArrayList<LogicStone>();
 		
 		for(int duoIndex = 0; duoIndex < Board.allowedColArr.length; duoIndex++) 
 		{
-			if(isMoveAllowed(new LogicStone(stone), new LogicStone(GraphicsBoard.getStoneArr()[GraphicsBoard.allowedRowArr[duoIndex]][GraphicsBoard.allowedColArr[duoIndex]])) 
-					&& logicBoard.LBoard[GraphicsBoard.allowedRowArr[duoIndex]][GraphicsBoard.allowedColArr[duoIndex]] == LogicBoard.playableChar) 
+			if(isMoveAllowed(stone, logicBoard.getBoard()[LogicBoard.allowedRowArr[duoIndex]][LogicBoard.allowedColArr[duoIndex]]) 
+					&& logicBoard.getBoard()[LogicBoard.allowedRowArr[duoIndex]][LogicBoard.allowedColArr[duoIndex]] != null) 
 			{
-				allowedMovesArr.add(new LogicStone(GraphicsBoard.allowedRowArr[duoIndex], GraphicsBoard.allowedColArr[duoIndex], stone.getColor()));
+				allowedMovesArr.add(new LogicStone(LogicBoard.allowedRowArr[duoIndex], LogicBoard.allowedColArr[duoIndex], stone.getColor()));
 			}
 		}
 		return allowedMovesArr;
 	}
 	
-	public ArrayList<LogicStone> checkRow(Stone stone) 
+	public ArrayList<LogicStone> checkRow(LogicStone stone) 
 	{
-		char charInLogic = stone.getColor() == Game.firstColor ? LogicBoard.firstPlayerChar : LogicBoard.secPlayerChar;
 		int rowToCheck = stone.getRow();
 		
 		int startCol = (rowToCheck == 3) ? stone.getCol() < 3 ? 0 : 4 : 0;
@@ -90,15 +87,15 @@ public class LogicGame {
 		
 		for(int curCol = startCol; curCol < endCol; curCol++) 
 		{
-			if(logicBoard.LBoard[rowToCheck][curCol] == charInLogic)
-				logicStoneArr.add(new LogicStone(rowToCheck, curCol, stone.getColor()));
+			if(logicBoard.getBoard()[rowToCheck][curCol] != null) // if exists
+				if(logicBoard.getBoard()[rowToCheck][curCol].getColor() == stone.getColor())
+					logicStoneArr.add(logicBoard.getBoard()[rowToCheck][curCol]);
 		}
 		return logicStoneArr.size() == 3 ? logicStoneArr : null;
 	}
 	
-	public ArrayList<LogicStone> checkCol(Stone stone) 
+	public ArrayList<LogicStone> checkCol(LogicStone stone) 
 	{
-		char charInLogic = stone.getColor() == Game.firstColor ? LogicBoard.firstPlayerChar : LogicBoard.secPlayerChar;
 		int colToCheck = stone.getCol();
 		
 		int startRow = (colToCheck == 3) ? stone.getRow() < 3 ? 0 : 4 : 0;
@@ -107,21 +104,20 @@ public class LogicGame {
 		
 		for(int curRow = startRow; curRow < endRow; curRow++) 
 		{
-			if(logicBoard.LBoard[curRow][colToCheck] == charInLogic)
-				logicStoneArr.add(new LogicStone(curRow, colToCheck, stone.getColor()));
+			if(logicBoard.getBoard()[curRow][colToCheck] != null) // if exists
+				if(logicBoard.getBoard()[curRow][colToCheck].getColor() == stone.getColor())
+					logicStoneArr.add(logicBoard.getBoard()[curRow][colToCheck]);
 		}
 		return logicStoneArr.size() == 3 ? logicStoneArr : null;
 	}
 	
-	public boolean isStoneInTrio(Stone stone) 
+	public boolean isStoneInTrio(LogicStone stone) 
 	{
 		return checkCol(stone) != null || checkRow(stone) != null;
 	}
 	
 	public int countTrios(Color curColor) 
 	{
-		char charInLogic = curColor == Game.firstColor ? LogicBoard.firstPlayerChar : LogicBoard.secPlayerChar;
-		
 		ArrayList<Integer> rowsToSkip = new ArrayList<Integer>();
 		ArrayList<Integer> colsToSkip = new ArrayList<Integer>();
 		
@@ -129,14 +125,14 @@ public class LogicGame {
 		
 		for(int duoIndex = 0; duoIndex < Board.allowedColArr.length; duoIndex++) 
     	{
-			if(logicBoard.LBoard[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]] == charInLogic) 
+			if(logicBoard.getBoard()[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]].getColor() == curColor) 
 			{
-				if(!rowsToSkip.contains(Board.allowedRowArr[duoIndex]) && checkRow(GraphicsBoard.getStoneArr()[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]]) != null) 
+				if(!rowsToSkip.contains(Board.allowedRowArr[duoIndex]) && checkRow(logicBoard.getBoard()[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]]) != null) 
 				{
 					counter++;
 					rowsToSkip.add(Board.allowedRowArr[duoIndex]);
 				}
-				if(!colsToSkip.contains(Board.allowedColArr[duoIndex]) && checkCol(GraphicsBoard.getStoneArr()[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]]) != null) 
+				if(!colsToSkip.contains(Board.allowedColArr[duoIndex]) && checkCol(logicBoard.getBoard()[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]]) != null) 
 				{
 					counter++;
 					colsToSkip.add(Board.allowedColArr[duoIndex]);
@@ -149,13 +145,12 @@ public class LogicGame {
 	
 	public ArrayList<LogicStone> allPossibleMoves(Color curColor) 
 	{
-		char charInLogic = curColor == Game.firstColor ? LogicBoard.firstPlayerChar : LogicBoard.secPlayerChar;
 		ArrayList<LogicStone> possibleMoves = new ArrayList<LogicStone>();
 		
 		for(int duoIndex = 0; duoIndex < Board.allowedColArr.length; duoIndex++) 
     	{
-			if(logicBoard.LBoard[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]] == charInLogic) 
-				possibleMoves.addAll(allowedMoves(GraphicsBoard.getStoneArr()[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]]));
+			if(logicBoard.getBoard()[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]].getColor() == curColor) 
+				possibleMoves.addAll(allowedMoves(logicBoard.getBoard()[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]]));
     	}
 		return possibleMoves;
 	}
@@ -166,7 +161,7 @@ public class LogicGame {
 		
 		for(int duoIndex = 0; duoIndex < Board.allowedColArr.length; duoIndex++) 
     	{
-			if(logicBoard.LBoard[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]] == LogicBoard.playableChar) 
+			if(logicBoard.getBoard()[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]].getColor() == null) 
 				possibleStonePlaces.add(new LogicStone(Board.allowedRowArr[duoIndex], Board.allowedColArr[duoIndex], null));
     	}
 		
