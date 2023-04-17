@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import Logic.LogicBoard;
 import Logic.LogicGame;
 import Logic.LogicStone;
+import Logic.Move;
 import Logic.AI;
 
 public class Board extends JPanel{
@@ -73,7 +74,7 @@ public class Board extends JPanel{
 			game.getSecColorBox().repaint();
 		}
 		
-		logicGame.getLogicBoard().setStoneColor(stone.getRow(), stone.getCol(), game.getCurrentPlayerColor());
+		logicGame.getLogicBoard().placeStone(stone.getRow(), stone.getCol(), game.getCurrentPlayerColor());
 
 		checkAndMarkForTrio(stone);
 		
@@ -84,6 +85,7 @@ public class Board extends JPanel{
 			game.changeTurn();
 		
 		repaintAllPanels();
+		logicGame.getLogicBoard().printLogicBoard();
 	}
     
     public void stoneClicked(Stone stone) // stone Moving / Removing Phase.
@@ -93,12 +95,12 @@ public class Board extends JPanel{
     		if(isAllowedToBeRemoved(stone))
     		{
     			if(stone.getColor() == Game.firstColor)
-    				logicGame.setFirstColorStonesLeft(logicGame.getFirstColorStonesLeft() - 1);
+    				logicGame.getLogicBoard().setFirstColorStonesLeft(logicGame.getLogicBoard().getFirstColorStonesLeft() - 1);
     			else
-    				logicGame.setSecColorStonesLeft(logicGame.getSecColorStonesLeft() - 1);
+    				logicGame.getLogicBoard().setSecColorStonesLeft(logicGame.getLogicBoard().getSecColorStonesLeft() - 1);
     			
     			stone.removeStone();
-    			logicGame.getLogicBoard().setStoneColor(stone.getRow(), stone.getCol(), null);
+    			logicGame.getLogicBoard().removeStone(stone.getRow(), stone.getCol());
     			 
     			checkForWinner();
     			
@@ -107,23 +109,24 @@ public class Board extends JPanel{
     			game.changeTurn();
     		}
     	}
-    	else if(!game.getPlacingPhase()) // moving phase
-    	{
-    		//Ai.getBestMove(game.getCurrentPlayerColor());
-    		
+    	
+    	// moving phase
+    	else if(!game.getPlacingPhase()) 
+    	{	
     		unmarkAllowedMoves();
-    		if(stone.getColor() != null && stone.getColor() == game.getCurrentPlayerColor()) // "copy" stone
+    		
+    		// "copy" stone
+    		if(stone.getColor() != null && stone.getColor() == game.getCurrentPlayerColor())
         	{
         		lastClickedStone = stone;
         		markAllowedMoves(stone);
         	}
-        	else if(stone.getColor() == null && lastClickedStone != null && logicGame.isMoveAllowed(new LogicStone(lastClickedStone), new LogicStone(stone)))// "paste" stone
+    		// "paste" stone
+        	else if(stone.getColor() == null && lastClickedStone != null && logicGame.isMoveAllowed(new Move(lastClickedStone.getRow(), lastClickedStone.getCol(), stone.getRow(), stone.getCol(), stone.getColor())))
         	{	
     			stone.drawStone(lastClickedStone.getColor());
-    			logicGame.getLogicBoard().setStoneColor(stone.getRow(), stone.getCol(), game.getCurrentPlayerColor());
-    			
-        		lastClickedStone.removeStone();
-        		logicGame.getLogicBoard().setStoneColor(lastClickedStone.getRow(), lastClickedStone.getCol(), null);
+    			lastClickedStone.removeStone();
+    			logicGame.getLogicBoard().moveStone(lastClickedStone.getRow(), lastClickedStone.getCol(), stone.getRow(), stone.getCol());
         		
         		lastClickedStone = null;
         		
@@ -137,6 +140,7 @@ public class Board extends JPanel{
     	}
     	
     	repaintAllPanels();
+    	logicGame.getLogicBoard().printLogicBoard();
     }
     
     public void checkForWinner() 
@@ -202,12 +206,12 @@ public class Board extends JPanel{
     
     public void markAllowedMoves(Stone stone) 
     {
-    	ArrayList<LogicStone> allowedMovesArr = logicGame.allowedMoves(new LogicStone(stone));
+    	ArrayList<Move> allowedMovesArr = logicGame.allowedMoves(new LogicStone(stone));
     	
     	for(int i = 0; i < allowedMovesArr.size(); i++) 
 		{
-			LogicStone logicStone = allowedMovesArr.get(i);
-			stoneArr[logicStone.getRow()][logicStone.getCol()].setAllowed(true);
+			Move m = allowedMovesArr.get(i);
+			stoneArr[m.getNextRow()][m.getNextCol()].setAllowed(true);
 		}
     }
     

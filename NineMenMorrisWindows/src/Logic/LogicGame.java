@@ -10,9 +10,6 @@ import Graphics.Stone;
 public class LogicGame {	
 	private LogicBoard logicBoard; 
 	
-	private int firstColorStonesLeft = 9;
-	private int secColorStonesLeft = 9;
-	
 	public LogicGame() 
 	{
 		logicBoard = new LogicBoard();
@@ -23,16 +20,16 @@ public class LogicGame {
 		this.logicBoard = logicBoard;
 	}
 	
-	public boolean isMoveAllowed(LogicStone lastStone, LogicStone nextStone) 
+	public boolean isMoveAllowed(Move m) 
 	{	
-		if(lastStone.getColor() == Game.firstColor && firstColorStonesLeft <= 3) // JUNK MOVES
+		if(m.getColor() == Game.firstColor && logicBoard.getFirstColorStonesLeft() <= 3) // JUNK MOVES
 			return true;
-		if(lastStone.getColor() == Game.secColor && secColorStonesLeft <= 3)
+		if(m.getColor() == Game.secColor && logicBoard.getSecColorStonesLeft() <= 3)
 			return true;
 		
 		int allowedRowDis = 0;
 		int allowedColDis = 0;
-		switch(lastStone.getRow()) 
+		switch(m.getCurRow()) 
 		{
 		case 0,6:
 			allowedColDis = 3;
@@ -45,7 +42,7 @@ public class LogicGame {
 			break;
 		}
 		
-		switch(lastStone.getCol()) 
+		switch(m.getCurCol()) 
 		{
 		case 0,6:
 			allowedRowDis = 3;
@@ -58,23 +55,24 @@ public class LogicGame {
 			break;
 		}
 		
-		if(Math.abs(lastStone.getRow() - nextStone.getRow()) == allowedRowDis && lastStone.getCol() - nextStone.getCol() == 0)
+		if(Math.abs(m.getCurRow() - m.getNextRow()) == allowedRowDis && m.getCurCol() - m.getNextCol() == 0)
 			return true;
-		if(Math.abs(lastStone.getCol() - nextStone.getCol()) == allowedColDis && lastStone.getRow() - nextStone.getRow() == 0)
+		if(Math.abs(m.getCurCol() - m.getNextCol()) == allowedColDis && m.getCurRow() - m.getNextRow() == 0)
 			return true;
 		return false;
 	}
 	
-	public ArrayList<LogicStone> allowedMoves(LogicStone stone)
+	public ArrayList<Move> allowedMoves(LogicStone stone)
 	{
-		ArrayList<LogicStone> allowedMovesArr = new ArrayList<LogicStone>();
+		ArrayList<Move> allowedMovesArr = new ArrayList<Move>();
 		
 		for(int duoIndex = 0; duoIndex < Board.allowedColArr.length; duoIndex++) 
 		{
-			if(isMoveAllowed(stone, logicBoard.getBoard()[LogicBoard.allowedRowArr[duoIndex]][LogicBoard.allowedColArr[duoIndex]]) 
-					&& logicBoard.getBoard()[LogicBoard.allowedRowArr[duoIndex]][LogicBoard.allowedColArr[duoIndex]] != null) 
+			if(logicBoard.getBoard()[LogicBoard.allowedRowArr[duoIndex]][LogicBoard.allowedColArr[duoIndex]].isEmpty()) 
 			{
-				allowedMovesArr.add(new LogicStone(LogicBoard.allowedRowArr[duoIndex], LogicBoard.allowedColArr[duoIndex], stone.getColor()));
+				Move m = new Move(stone.getRow(), stone.getCol(), LogicBoard.allowedRowArr[duoIndex], LogicBoard.allowedColArr[duoIndex], stone.getColor());
+				if(isMoveAllowed(m))
+					allowedMovesArr.add(m);
 			}
 		}
 		return allowedMovesArr;
@@ -146,11 +144,10 @@ public class LogicGame {
 		return counter;
 	}
 	
-	public ArrayList<LogicStone> allPossibleMoves(Color curColor) 
+	public ArrayList<Move> allPossibleMoves(Color curColor) 
 	{
-		ArrayList<LogicStone> possibleMoves = new ArrayList<LogicStone>();
+		ArrayList<Move> possibleMoves = new ArrayList<Move>();
 		
-		System.out.println("---------------------------");
 		for(int duoIndex = 0; duoIndex < Board.allowedColArr.length; duoIndex++) 
     	{
 			if(logicBoard.getBoard()[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]].getColor() == curColor) 
@@ -175,10 +172,9 @@ public class LogicGame {
 	public boolean isWinner(Color _color) 
 	{
 		Color loserColor = _color == Game.firstColor ? Game.secColor : Game.firstColor;
-		printAllMoves(allPossibleMoves(loserColor));
-		if(_color == Game.firstColor && secColorStonesLeft < 3)
+		if(_color == Game.firstColor && logicBoard.getSecColorStonesLeft() < 3)
 			return true;
-		if(_color == Game.secColor && firstColorStonesLeft < 3)
+		if(_color == Game.secColor && logicBoard.getFirstColorStonesLeft() < 3)
 			return true;
 		if(allPossibleMoves(loserColor).size() == 0)
 			return true;
@@ -195,24 +191,6 @@ public class LogicGame {
 		}
 		System.out.print("size: ");
 		System.out.println(possibleMoves.size());
-	}
-	
-	
-	
-	public int getFirstColorStonesLeft() {
-		return firstColorStonesLeft;
-	}
-
-	public void setFirstColorStonesLeft(int firstColorStonesLeft) {
-		this.firstColorStonesLeft = firstColorStonesLeft;
-	}
-
-	public int getSecColorStonesLeft() {
-		return secColorStonesLeft;
-	}
-
-	public void setSecColorStonesLeft(int secColorStonesLeft) {
-		this.secColorStonesLeft = secColorStonesLeft;
 	}
 
 	public LogicBoard getLogicBoard() {
