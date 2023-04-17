@@ -8,8 +8,6 @@ import Graphics.Game;
 import Graphics.Stone;
 
 public class LogicGame {
-	
-	// way to rate - move that will create - 3 is the best, 2 is second best, 1 is the worst. and MOBILITY!
 	public static int aiLevel = 0; // 0 - None, 1 - Easy, 2 - Medium, 3 - Hard
 	
 	private Board GraphicsBoard;
@@ -24,24 +22,11 @@ public class LogicGame {
 		GraphicsBoard = _GraphicsBoard;
 	}
 	
-	public boolean isWinner(Color _color) 
-	{
-		Color loserColor = _color == Game.firstColor ? Game.secColor : Game.firstColor;
-		printAllMoves(allPossibleMoves(loserColor));
-		if(_color == Game.firstColor && secColorStonesLeft < 3)
-			return true;
-		if(_color == Game.secColor && firstColorStonesLeft < 3)
-			return true;
-		if(allPossibleMoves(loserColor).size() == 0)
-			return true;
-		return false;
-	}
-	
-	public boolean isMoveAllowed(Stone lastStone, Stone nextStone) 
+	public boolean isMoveAllowed(LogicStone lastStone, LogicStone nextStone) 
 	{	
-		if(lastStone.getStoneColor() == Game.firstColor && firstColorStonesLeft <= 3) // JUNK MOVES
+		if(lastStone.getColor() == Game.firstColor && firstColorStonesLeft <= 3) // JUNK MOVES
 			return true;
-		if(lastStone.getStoneColor() == Game.secColor && secColorStonesLeft <= 3)
+		if(lastStone.getColor() == Game.secColor && secColorStonesLeft <= 3)
 			return true;
 		
 		int allowedRowDis = 0;
@@ -85,10 +70,10 @@ public class LogicGame {
 		
 		for(int duoIndex = 0; duoIndex < Board.allowedColArr.length; duoIndex++) 
 		{
-			if(isMoveAllowed(stone, GraphicsBoard.getStoneArr()[GraphicsBoard.allowedRowArr[duoIndex]][GraphicsBoard.allowedColArr[duoIndex]]) 
+			if(isMoveAllowed(new LogicStone(stone), new LogicStone(GraphicsBoard.getStoneArr()[GraphicsBoard.allowedRowArr[duoIndex]][GraphicsBoard.allowedColArr[duoIndex]])) 
 					&& logicBoard.LBoard[GraphicsBoard.allowedRowArr[duoIndex]][GraphicsBoard.allowedColArr[duoIndex]] == LogicBoard.playableChar) 
 			{
-				allowedMovesArr.add(new LogicStone(GraphicsBoard.allowedRowArr[duoIndex], GraphicsBoard.allowedColArr[duoIndex]));
+				allowedMovesArr.add(new LogicStone(GraphicsBoard.allowedRowArr[duoIndex], GraphicsBoard.allowedColArr[duoIndex], stone.getColor()));
 			}
 		}
 		return allowedMovesArr;
@@ -96,7 +81,7 @@ public class LogicGame {
 	
 	public ArrayList<LogicStone> checkRow(Stone stone) 
 	{
-		char charInLogic = stone.getStoneColor() == Game.firstColor ? LogicBoard.firstPlayerChar : LogicBoard.secPlayerChar;
+		char charInLogic = stone.getColor() == Game.firstColor ? LogicBoard.firstPlayerChar : LogicBoard.secPlayerChar;
 		int rowToCheck = stone.getRow();
 		
 		int startCol = (rowToCheck == 3) ? stone.getCol() < 3 ? 0 : 4 : 0;
@@ -106,14 +91,14 @@ public class LogicGame {
 		for(int curCol = startCol; curCol < endCol; curCol++) 
 		{
 			if(logicBoard.LBoard[rowToCheck][curCol] == charInLogic)
-				logicStoneArr.add(new LogicStone(rowToCheck, curCol));
+				logicStoneArr.add(new LogicStone(rowToCheck, curCol, stone.getColor()));
 		}
 		return logicStoneArr.size() == 3 ? logicStoneArr : null;
 	}
 	
 	public ArrayList<LogicStone> checkCol(Stone stone) 
 	{
-		char charInLogic = stone.getStoneColor() == Game.firstColor ? LogicBoard.firstPlayerChar : LogicBoard.secPlayerChar;
+		char charInLogic = stone.getColor() == Game.firstColor ? LogicBoard.firstPlayerChar : LogicBoard.secPlayerChar;
 		int colToCheck = stone.getCol();
 		
 		int startRow = (colToCheck == 3) ? stone.getRow() < 3 ? 0 : 4 : 0;
@@ -122,9 +107,8 @@ public class LogicGame {
 		
 		for(int curRow = startRow; curRow < endRow; curRow++) 
 		{
-			
 			if(logicBoard.LBoard[curRow][colToCheck] == charInLogic)
-				logicStoneArr.add(new LogicStone(curRow, colToCheck));
+				logicStoneArr.add(new LogicStone(curRow, colToCheck, stone.getColor()));
 		}
 		return logicStoneArr.size() == 3 ? logicStoneArr : null;
 	}
@@ -132,6 +116,35 @@ public class LogicGame {
 	public boolean isStoneInTrio(Stone stone) 
 	{
 		return checkCol(stone) != null || checkRow(stone) != null;
+	}
+	
+	public int countTrios(Color curColor) 
+	{
+		char charInLogic = curColor == Game.firstColor ? LogicBoard.firstPlayerChar : LogicBoard.secPlayerChar;
+		
+		ArrayList<Integer> rowsToSkip = new ArrayList<Integer>();
+		ArrayList<Integer> colsToSkip = new ArrayList<Integer>();
+		
+		int counter = 0;
+		
+		for(int duoIndex = 0; duoIndex < Board.allowedColArr.length; duoIndex++) 
+    	{
+			if(logicBoard.LBoard[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]] == charInLogic) 
+			{
+				if(!rowsToSkip.contains(Board.allowedRowArr[duoIndex]) && checkRow(GraphicsBoard.getStoneArr()[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]]) != null) 
+				{
+					counter++;
+					rowsToSkip.add(Board.allowedRowArr[duoIndex]);
+				}
+				if(!colsToSkip.contains(Board.allowedColArr[duoIndex]) && checkCol(GraphicsBoard.getStoneArr()[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]]) != null) 
+				{
+					counter++;
+					colsToSkip.add(Board.allowedColArr[duoIndex]);
+				}
+			}
+    	}
+		
+		return counter;
 	}
 	
 	public ArrayList<LogicStone> allPossibleMoves(Color curColor) 
@@ -154,10 +167,23 @@ public class LogicGame {
 		for(int duoIndex = 0; duoIndex < Board.allowedColArr.length; duoIndex++) 
     	{
 			if(logicBoard.LBoard[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]] == LogicBoard.playableChar) 
-				possibleStonePlaces.add(new LogicStone(Board.allowedRowArr[duoIndex], Board.allowedColArr[duoIndex]));
+				possibleStonePlaces.add(new LogicStone(Board.allowedRowArr[duoIndex], Board.allowedColArr[duoIndex], null));
     	}
 		
 		return possibleStonePlaces;
+	}
+	
+	public boolean isWinner(Color _color) 
+	{
+		Color loserColor = _color == Game.firstColor ? Game.secColor : Game.firstColor;
+		printAllMoves(allPossibleMoves(loserColor));
+		if(_color == Game.firstColor && secColorStonesLeft < 3)
+			return true;
+		if(_color == Game.secColor && firstColorStonesLeft < 3)
+			return true;
+		if(allPossibleMoves(loserColor).size() == 0)
+			return true;
+		return false;
 	}
 	
 	public void printAllMoves(ArrayList<LogicStone> possibleMoves) 
@@ -171,6 +197,8 @@ public class LogicGame {
 		System.out.print("size: ");
 		System.out.println(possibleMoves.size());
 	}
+	
+	
 	
 	public int getFirstColorStonesLeft() {
 		return firstColorStonesLeft;

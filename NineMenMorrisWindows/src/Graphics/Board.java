@@ -90,13 +90,13 @@ public class Board extends JPanel{
 		//logicGame.getLogicBoard().printLBoard();
 	}
     
-    public void stoneClicked(Stone stone)
+    public void stoneClicked(Stone stone) // stone Moving / Removing Phase.
     {	
     	if(shouldRemoveStone) 
     	{
     		if(isAllowedToBeRemoved(stone))
     		{
-    			if(stone.getStoneColor() == Game.firstColor)
+    			if(stone.getColor() == Game.firstColor)
     				logicGame.setFirstColorStonesLeft(logicGame.getFirstColorStonesLeft() - 1);
     			else
     				logicGame.setSecColorStonesLeft(logicGame.getSecColorStonesLeft() - 1);
@@ -114,15 +114,15 @@ public class Board extends JPanel{
     	else if(!game.getPlacingPhase()) // moving phase
     	{
     		unmarkAllowedMoves();
-    		if(stone.getStoneColor() != null && stone.getStoneColor() == game.getCurrentPlayerColor()) // "copy" stone
+    		if(stone.getColor() != null && stone.getColor() == game.getCurrentPlayerColor()) // "copy" stone
         	{
         		lastClickedStone = stone;
         		markAllowedMoves(stone);
         	}
-        	else if(stone.getStoneColor() == null && lastClickedStone != null && logicGame.isMoveAllowed(lastClickedStone, stone))// "paste" stone
+        	else if(stone.getColor() == null && lastClickedStone != null && logicGame.isMoveAllowed(new LogicStone(lastClickedStone), new LogicStone(stone)))// "paste" stone
         	{	
-    			stone.drawStone(lastClickedStone.getStoneColor());
-    			logicBoard.setValue(stone.getRow(), stone.getCol(), stone.getStoneColor());
+    			stone.drawStone(lastClickedStone.getColor());
+    			logicBoard.setValue(stone.getRow(), stone.getCol(), stone.getColor());
     			
         		lastClickedStone.removeStone();
         		logicBoard.setValue(lastClickedStone.getRow(), lastClickedStone.getCol(), null);
@@ -155,13 +155,13 @@ public class Board extends JPanel{
     
     public boolean isAllowedToBeRemoved(Stone stone) 
     {
-    	return stone.getStoneColor() != null && stone.getStoneColor() != game.getCurrentPlayerColor() && !logicGame.isStoneInTrio(stone);
+    	return stone.getColor() != null && stone.getColor() != game.getCurrentPlayerColor() && !logicGame.isStoneInTrio(stone);
     }
     
     public boolean canRemoveAnyStone(Color color)
     {
     	for(int duoIndex = 0; duoIndex < allowedColArr.length; duoIndex++) 
-    		if(stoneArr[allowedRowArr[duoIndex]][allowedColArr[duoIndex]].getStoneColor() == color && !logicGame.isStoneInTrio(stoneArr[allowedRowArr[duoIndex]][allowedColArr[duoIndex]])) // right color and can remove
+    		if(stoneArr[allowedRowArr[duoIndex]][allowedColArr[duoIndex]].getColor() == color && !logicGame.isStoneInTrio(stoneArr[allowedRowArr[duoIndex]][allowedColArr[duoIndex]])) // right color and can remove
     			return true;
     	return false;
     }
@@ -169,7 +169,7 @@ public class Board extends JPanel{
     public void checkAndMarkForTrio(Stone stone) 
     {
     	ArrayList<LogicStone> logicStoneArr = logicGame.checkCol(stone);
-    	if(canRemoveAnyStone(stone.getStoneColor() == game.firstColor ? game.secColor : game.firstColor)) // will mark and allow to remove only if you CAN remove 
+    	if(canRemoveAnyStone(stone.getColor() == game.firstColor ? game.secColor : game.firstColor)) // will mark and allow to remove only if you CAN remove 
     	{
     		if(logicStoneArr != null) // checking cols first
         	{

@@ -47,4 +47,6 @@ public class LogicBoard {
 				LBoard[row][col] = value;
 	}
 	
+	
+	
 }

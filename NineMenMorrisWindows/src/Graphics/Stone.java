@@ -118,7 +118,7 @@ public class Stone extends JPanel{
 		}
 	}
 	
-	public Color getStoneColor() {
+	public Color getColor() {
 		return stoneColor;
 	}
 
