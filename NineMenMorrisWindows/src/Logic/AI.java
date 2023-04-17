@@ -13,7 +13,7 @@ public class AI {
 		this.logicGame = logicGame;
 	}
 	
-	public int evaluateMove(LogicStone move) 
+	public int evaluateMove(Move m) 
 	{
 		int score = 0;
 		LogicBoard boardAfterMove = new LogicBoard(this.logicGame.getLogicBoard());

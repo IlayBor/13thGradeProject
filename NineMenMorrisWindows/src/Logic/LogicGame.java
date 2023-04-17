@@ -22,9 +22,10 @@ public class LogicGame {
 	
 	public boolean isMoveAllowed(Move m) 
 	{	
-		if(m.getColor() == Game.firstColor && logicBoard.getFirstColorStonesLeft() <= 3) // JUNK MOVES
+		// Junk moves
+		if(logicBoard.getBoard()[m.getCurRow()][m.getCurCol()].getColor() == Game.firstColor && logicBoard.getFirstColorStonesLeft() <= 3)
 			return true;
-		if(m.getColor() == Game.secColor && logicBoard.getSecColorStonesLeft() <= 3)
+		if(logicBoard.getBoard()[m.getCurRow()][m.getCurCol()].getColor() == Game.secColor && logicBoard.getSecColorStonesLeft() <= 3)
 			return true;
 		
 		int allowedRowDis = 0;
@@ -70,7 +71,7 @@ public class LogicGame {
 		{
 			if(logicBoard.getBoard()[LogicBoard.allowedRowArr[duoIndex]][LogicBoard.allowedColArr[duoIndex]].isEmpty()) 
 			{
-				Move m = new Move(stone.getRow(), stone.getCol(), LogicBoard.allowedRowArr[duoIndex], LogicBoard.allowedColArr[duoIndex], stone.getColor());
+				Move m = new Move(stone.getRow(), stone.getCol(), LogicBoard.allowedRowArr[duoIndex], LogicBoard.allowedColArr[duoIndex]);
 				if(isMoveAllowed(m))
 					allowedMovesArr.add(m);
 			}

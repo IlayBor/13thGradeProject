@@ -122,11 +122,13 @@ public class Board extends JPanel{
         		markAllowedMoves(stone);
         	}
     		// "paste" stone
-        	else if(stone.getColor() == null && lastClickedStone != null && logicGame.isMoveAllowed(new Move(lastClickedStone.getRow(), lastClickedStone.getCol(), stone.getRow(), stone.getCol(), stone.getColor())))
+        	else if(stone.getColor() == null && lastClickedStone != null && logicGame.isMoveAllowed(new Move(lastClickedStone.getRow(), lastClickedStone.getCol(), stone.getRow(), stone.getCol())))
         	{	
+        		Move m = new Move(lastClickedStone.getRow(), lastClickedStone.getCol(), stone.getRow(), stone.getCol());
     			stone.drawStone(lastClickedStone.getColor());
     			lastClickedStone.removeStone();
-    			logicGame.getLogicBoard().moveStone(lastClickedStone.getRow(), lastClickedStone.getCol(), stone.getRow(), stone.getCol());
+    			
+    			logicGame.getLogicBoard().moveStone(m);
         		
         		lastClickedStone = null;
         		

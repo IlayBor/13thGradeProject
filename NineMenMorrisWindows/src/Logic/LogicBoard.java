@@ -52,11 +52,11 @@ public class LogicBoard {
 		placeStone(row, col, null);
 	}
 	
-	public void moveStone(int curRow, int curCol, int nextRow, int nextCol) 
+	public void moveStone(Move m) 
 	{
-		placeStone(nextRow, nextCol, board[curRow][curCol].getColor());
-		removeStone(curRow, curCol);
-	}
+		placeStone(m.getNextRow(), m.getNextCol(), board[m.getCurRow()][m.getCurCol()].getColor());
+		removeStone(m.getCurRow(), m.getCurCol());
+	}	
 	
 	public void printLogicBoard() 
 	{
