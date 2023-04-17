@@ -85,11 +85,11 @@ public class Board extends JPanel{
 			game.changeTurn();
 		
 		repaintAllPanels();
-		logicGame.getLogicBoard().printLogicBoard();
 	}
     
     public void stoneClicked(Stone stone) // stone Moving / Removing Phase.
     {	
+    	Ai.printAllBoards(game.getCurrentPlayerColor());
     	if(shouldRemoveStone) 
     	{
     		if(isAllowedToBeRemoved(stone))
@@ -142,7 +142,6 @@ public class Board extends JPanel{
     	}
     	
     	repaintAllPanels();
-    	logicGame.getLogicBoard().printLogicBoard();
     }
     
     public void checkForWinner() 
