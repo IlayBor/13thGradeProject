@@ -6,6 +6,8 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JPanel;
 
+import Logic.AI;
+
 public class Stone extends JPanel{
 	
 	private static int stoneSize = 50; // static variables

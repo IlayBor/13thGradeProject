@@ -29,7 +29,7 @@ public class Board extends JPanel{
 	
 	private Game game;
 	private LogicGame logicGame = new LogicGame();
-	private AI Ai = new AI(logicGame);
+	
 	private Stone stoneArr[][] = new Stone[7][7];
 	private Stone lastClickedStone = null;
 	private boolean shouldRemoveStone = false;
@@ -89,7 +89,6 @@ public class Board extends JPanel{
     
     public void stoneClicked(Stone stone) // stone Moving / Removing Phase.
     {	
-    	Ai.printAllBoards(game.getCurrentPlayerColor());
     	if(shouldRemoveStone) 
     	{
     		if(isAllowedToBeRemoved(stone))
@@ -249,6 +248,10 @@ public class Board extends JPanel{
 
 	public boolean getIsShouldRemoveStone() {
 		return shouldRemoveStone;
+	}
+
+	public LogicGame getLogicGame() {
+		return logicGame;
 	}
     
     

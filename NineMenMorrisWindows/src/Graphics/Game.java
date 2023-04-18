@@ -8,6 +8,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import Logic.AI;
+import Logic.LogicStone;
+
 public class Game extends JPanel implements ActionListener{
 	public static Color firstColor = new Color(255,255,255,255); // game static colors
 	public static Color secColor = new Color(0,0,0,255); 
@@ -28,7 +31,8 @@ public class Game extends JPanel implements ActionListener{
 	private JButton resetButton;
 	private ImageIcon image;
 	
-	private int playerTurn = 0; // game logic variables
+	private AI Ai; // game logic variables 
+	private int playerTurn = 0; 
 	private Color currentPlayerColor = firstColor;
 	private boolean placingPhase = true;
 	private int firstColorStonesLeft = 9;
@@ -44,6 +48,7 @@ public class Game extends JPanel implements ActionListener{
 		board = new Board(this);
 		board.setBounds(Frame.frameX/2-Board.boardX/2 , 0, Board.boardX,Board.boardY );
 		add(board);
+		Ai = new AI(board.getLogicGame());
 		
 		firstColorBox = new Box(firstColor, this);
 		firstColorBox.setBounds(Frame.frameX/2+Board.boardX/2 + 40,100,Box.boxXSize, Box.boxYSize);
@@ -68,6 +73,13 @@ public class Game extends JPanel implements ActionListener{
 	{
 		playerTurn = playerTurn == 0 ? 1 : 0;
 		currentPlayerColor = playerTurn == 0 ? firstColor : secColor;
+		
+		if(Ai.aiLevel > 0 && currentPlayerColor == secColor) 
+		{
+			LogicStone AiStone = Ai.getBestStonePlace(getCurrentPlayerColor());
+			board.getStoneArr()[AiStone.getRow()][AiStone.getCol()].drawStone(secColor);
+			board.stonePlaced(board.getStoneArr()[AiStone.getRow()][AiStone.getCol()]);
+		}
 	}
 	
 	public void actionPerformed(ActionEvent e) {
