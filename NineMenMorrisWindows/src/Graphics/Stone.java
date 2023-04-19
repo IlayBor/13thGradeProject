@@ -14,18 +14,16 @@ public class Stone extends JPanel{
 	
 	private static int stoneSize = 50; // static variables
 	
-	private int row; // variables
-	private int col;
-	
-	private boolean allowed = false;
-	private boolean inTrio = false;
-	private int stoneCenterX = 42;
+	private int stoneCenterX = 42; // draw coords
 	private int stoneCenterY = 42;
 	
-	private Color stoneColor = null;
-	private Color glowColor = Game.defaultIndicator;
+	private Board board;
 	
-	private Board board; // the board
+	private int row; // variables
+	private int col;
+	private boolean isAllowedMove = false;
+	private boolean isInMill = false;
+	private Color color = null;
 	
 	public Stone(int _row, int _col, Board _board) 
 	{
@@ -41,13 +39,13 @@ public class Stone extends JPanel{
 		super.paintComponent(g);
 		
 		// There is nothing to draw
-		if(!inTrio && !allowed && stoneColor == null)
+		if(!isAllowedMove && !isInMill && color == null)
 			return;
 		
 		Color currentColor = board.getGame().getCurrentPlayerColor();
 		Color opponentColor = currentColor == Game.firstColor ? Game.secColor : Game.firstColor;
 		
-		if(inTrio) 
+		if(isInMill) 
 		{
 			g.setColor(Game.trioColor);
 			g.fillOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
@@ -55,7 +53,7 @@ public class Stone extends JPanel{
 			g.setColor(g.getColor().darker());
 			g.drawOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
 		}
-		else if(allowed) 
+		else if(isAllowedMove) 
 		{
 			g.setColor(Game.allowedColor);
 			g.fillOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
@@ -65,23 +63,23 @@ public class Stone extends JPanel{
 		}
 		else if(board.getGamePhase() == Phase.remove) 
 		{
-			g.setColor(stoneColor);
+			g.setColor(color);
 			g.fillOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
 			
-			g.setColor(stoneColor == opponentColor ? Game.removeGlowIndicatorColor : g.getColor().darker());
+			g.setColor(color == opponentColor ? Game.removeGlowIndicatorColor : g.getColor().darker());
 			g.drawOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
 		}
 		else if(board.getGamePhase() == Phase.move)
 		{
-			g.setColor(stoneColor);
+			g.setColor(color);
 			g.fillOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
 			
-			g.setColor(stoneColor == currentColor ? Game.globalGlowIndicatorColor : g.getColor().darker());
+			g.setColor(color == currentColor ? Game.globalGlowIndicatorColor : g.getColor().darker());
 	    	g.drawOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
 		}
 		else
 		{
-			g.setColor(stoneColor);
+			g.setColor(color);
 			g.fillOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
 			
 			g.setColor(g.getColor().darker());
@@ -101,14 +99,13 @@ public class Stone extends JPanel{
 	
 	public void removeStone() 
 	{
-		glowColor = Game.defaultIndicator;
-		stoneColor = null;
+		color = null;
 		repaint();
 	}
 	
 	public void drawStone(Color _color) 
 	{
-		stoneColor = _color;
+		color = _color;
 		repaint();
 	}
 	
@@ -121,7 +118,7 @@ public class Stone extends JPanel{
 				board.placeStone(Stone.this);
 			// Stone Moving Phase
 			else if(board.getGamePhase() == Phase.move)
-				board.moveStone(Stone.this, stoneColor != null ? Status.copy : Status.paste);
+				board.moveStone(Stone.this, color != null ? Status.copy : Status.paste);
 			// Stone Remove Phase
 			else
 				board.removeStone(Stone.this);
@@ -129,15 +126,15 @@ public class Stone extends JPanel{
 	}
 	
 	public Color getColor() {
-		return stoneColor;
+		return color;
+	}
+	
+	public void setAllowedMove(boolean isAllowedMove) {
+		this.isAllowedMove = isAllowedMove;
 	}
 
-	public void setInTrio(boolean isInTrio) {
-		this.inTrio = isInTrio;
-	}
-
-	public void setAllowed(boolean _Allowed) {
-		this.allowed = _Allowed;
+	public void setInMill(boolean isInMill) {
+		this.isInMill = isInMill;
 	}
 
 	public int getRow() {

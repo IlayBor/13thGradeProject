@@ -91,6 +91,10 @@ public class Game extends JPanel implements ActionListener{
 			frame.MoveToHome();
 	}	
 	
+	public void moveToHome() {
+		frame.MoveToHome();
+	}
+	
 	protected void paintComponent(Graphics g) 
     {
     	super.paintComponent(g); 
@@ -123,10 +127,6 @@ public class Game extends JPanel implements ActionListener{
 
 	public void setSecColorStonesLeft(int secColorStonesLeft) {
 		this.secColorStonesLeft = secColorStonesLeft;
-	}
-
-	public Frame getFrame() {
-		return frame;
 	}
 	
 	public Color getCurrentPlayerColor() {

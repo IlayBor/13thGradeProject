@@ -32,8 +32,6 @@ public class Board extends JPanel{
 	
 	private Move currentMove = new Move();
 	private Stone stoneArr[][] = new Stone[7][7];
-	private Stone lastClickedStone = null;
-	private boolean shouldRemoveStone = false;
 	private Phase gamePhase = Phase.place;
 	private Phase prevPhase;
 	
@@ -76,26 +74,18 @@ public class Board extends JPanel{
     		stoneArr[allowedRowArr[duoIndex]][allowedColArr[duoIndex]].addMouseListener();
     }
     
-    public void updateBox() 
-    {
-    	if(game.getCurrentPlayerColor() == Game.firstColor) 
-		{
-			game.setFirstColorStonesLeft(game.getFirstColorStonesLeft()-1);
-			game.getFirstColorBox().repaint();
-		}
-		else 
-		{
-			game.setSecColorStonesLeft(game.getSecColorStonesLeft()-1);
-			game.getSecColorBox().repaint();
-		}
-    }
-    
     // stone placing phase
     public void placeStone(Stone stone)
 	{	
     	// If there is already a stone
     	if(stoneArr[stone.getRow()][stone.getCol()].getColor() != null)
     		return;
+    	
+    	// Remove one stone from the player
+    	if(game.getCurrentPlayerColor() == Game.firstColor)
+    		game.setFirstColorStonesLeft(game.getFirstColorStonesLeft()-1);
+    	else
+    		game.setSecColorStonesLeft(game.getSecColorStonesLeft()-1);
     	
     	updateBox();
     	
@@ -189,8 +179,16 @@ public class Board extends JPanel{
 		{
     		String color = game.getCurrentPlayerColor() == Game.firstColor ? "White" : "Black";
 			javax.swing.JOptionPane.showMessageDialog(null, color + " Won!");
-			game.getFrame().MoveToHome();
+			game.moveToHome();
 		}
+    }
+    
+    public void updateBox() 
+    {
+    	if(game.getCurrentPlayerColor() == Game.firstColor) 
+			game.getFirstColorBox().repaint();
+		else 
+			game.getSecColorBox().repaint();
     }
     
     public boolean canRemoveAnyStone(Color color)
@@ -237,7 +235,7 @@ public class Board extends JPanel{
     	for(int i = 0; i < logicStoneArr.size(); i++) 
 		{
 			LogicStone logicStone = logicStoneArr.get(i);
-			stoneArr[logicStone.getRow()][logicStone.getCol()].setInTrio(true);
+			stoneArr[logicStone.getRow()][logicStone.getCol()].setInMill(true);
 			stoneArr[logicStone.getRow()][logicStone.getCol()].repaint();
 		}
     }
@@ -245,7 +243,7 @@ public class Board extends JPanel{
     public void unmarkMill() 
     {
     	for(int duoIndex = 0; duoIndex < allowedColArr.length; duoIndex++) 
-    		stoneArr[allowedRowArr[duoIndex]][allowedColArr[duoIndex]].setInTrio(false);
+    		stoneArr[allowedRowArr[duoIndex]][allowedColArr[duoIndex]].setInMill(false);
     }
     
     public void markAllowedMoves(Stone stone) 
@@ -255,7 +253,7 @@ public class Board extends JPanel{
     	for(int i = 0; i < allowedMovesArr.size(); i++) 
 		{
 			Move m = allowedMovesArr.get(i);
-			stoneArr[m.getNextRow()][m.getNextCol()].setAllowed(true);
+			stoneArr[m.getNextRow()][m.getNextCol()].setAllowedMove(true);
 			stoneArr[m.getNextRow()][m.getNextCol()].repaint();
 		}
     }
@@ -264,7 +262,7 @@ public class Board extends JPanel{
     {
     	for(int duoIndex = 0; duoIndex < allowedColArr.length; duoIndex++) 
     	{
-    		stoneArr[allowedRowArr[duoIndex]][allowedColArr[duoIndex]].setAllowed(false);
+    		stoneArr[allowedRowArr[duoIndex]][allowedColArr[duoIndex]].setAllowedMove(false);
     		stoneArr[allowedRowArr[duoIndex]][allowedColArr[duoIndex]].repaint();
     	}
     }
@@ -290,26 +288,11 @@ public class Board extends JPanel{
 		return stoneArr;
 	}
 
-	public Stone getLastClickedStone() {
-		return lastClickedStone;
-	}
-
-	public boolean getIsShouldRemoveStone() {
-		return shouldRemoveStone;
-	}
-
 	public Phase getGamePhase() {
 		return gamePhase;
-	}
-
-	public void setGamePhase(Phase gamePhase) {
-		this.gamePhase = gamePhase;
 	}
 
 	public LogicGame getLogicGame() {
 		return logicGame;
 	}
-    
-    
-    
 }
