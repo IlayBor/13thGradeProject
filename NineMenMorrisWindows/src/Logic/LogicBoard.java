@@ -16,8 +16,8 @@ public class LogicBoard {
 	public static char firstPlayerChar = '1'; // first player
 	public static char secPlayerChar = '2'; // second player
 	
-	private int firstColorStonesLeft = 9;
-	private int secColorStonesLeft = 9;
+	private int firstColorStonesOnBoard = 9;
+	private int secColorStonesOnBoard = 9;
 	
 	private LogicStone board[][] = new LogicStone[7][7];
 	
@@ -31,8 +31,8 @@ public class LogicBoard {
 		initBoard();
 		for(int duoIndex = 0; duoIndex < allowedColArr.length; duoIndex++) 
     		board[allowedRowArr[duoIndex]][allowedColArr[duoIndex]] = new LogicStone(toCopy.getBoard()[allowedRowArr[duoIndex]][allowedColArr[duoIndex]]);
-		this.firstColorStonesLeft = toCopy.getFirstColorStonesLeft();
-		this.secColorStonesLeft = toCopy.getSecColorStonesLeft();
+		this.firstColorStonesOnBoard = toCopy.firstColorStonesOnBoard;
+		this.secColorStonesOnBoard = toCopy.secColorStonesOnBoard;
 	}
 	
 	public void initBoard() 
@@ -57,6 +57,14 @@ public class LogicBoard {
 		placeStone(m.getNextRow(), m.getNextCol(), board[m.getCurRow()][m.getCurCol()].getColor());
 		removeStone(m.getCurRow(), m.getCurCol());
 	}	
+	
+	public void decreaseStonesOnBoard(Color color) 
+	{
+		if(color == Game.firstColor)
+			firstColorStonesOnBoard--;
+		else 
+			secColorStonesOnBoard--;
+	}
 	
 	public void printLogicBoard() 
 	{
@@ -88,21 +96,11 @@ public class LogicBoard {
 		return board;
 	}
 
-	public int getFirstColorStonesLeft() {
-		return firstColorStonesLeft;
+	public int getFirstColorStonesOnBoard() {
+		return firstColorStonesOnBoard;
 	}
 
-	public void setFirstColorStonesLeft(int firstColorStonesLeft) {
-		this.firstColorStonesLeft = firstColorStonesLeft;
+	public int getSecColorStonesOnBoard() {
+		return secColorStonesOnBoard;
 	}
-
-	public int getSecColorStonesLeft() {
-		return secColorStonesLeft;
-	}
-
-	public void setSecColorStonesLeft(int secColorStonesLeft) {
-		this.secColorStonesLeft = secColorStonesLeft;
-	}
-	
-	
 }

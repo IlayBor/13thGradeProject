@@ -10,6 +10,10 @@ public class Move {
 		this.nextRow = nextRow;
 		this.nextCol = nextCol;
 	}
+	
+	public Move() {
+		resetMove();
+	}
 
 	public int getCurRow() {
 		return curRow;
@@ -25,6 +29,31 @@ public class Move {
 
 	public int getNextCol() {
 		return nextCol;
+	}
+	
+	public void setCurrent(int row, int col) 
+	{
+		this.curRow = row;
+		this.curCol = col;
+	}
+	
+	public void setNext(int row, int col) 
+	{
+		this.nextRow = row;
+		this.nextCol = col;
+	}
+	
+	public boolean isCurExist() 
+	{
+		return (this.curRow != -1 && this.curRow != -1);
+	}
+	
+	public void resetMove() 
+	{
+		this.curRow = -1;
+		this.curCol = -1;
+		this.nextRow = -1;
+		this.nextCol = -1;
 	}
 }
 

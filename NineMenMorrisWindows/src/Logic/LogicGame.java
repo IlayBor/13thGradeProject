@@ -23,9 +23,9 @@ public class LogicGame {
 	public boolean isMoveAllowed(Move m) 
 	{	
 		// Junk moves
-		if(logicBoard.getBoard()[m.getCurRow()][m.getCurCol()].getColor() == Game.firstColor && logicBoard.getFirstColorStonesLeft() <= 3)
+		if(logicBoard.getBoard()[m.getCurRow()][m.getCurCol()].getColor() == Game.firstColor && logicBoard.getFirstColorStonesOnBoard() <= 3)
 			return true;
-		if(logicBoard.getBoard()[m.getCurRow()][m.getCurCol()].getColor() == Game.secColor && logicBoard.getSecColorStonesLeft() <= 3)
+		if(logicBoard.getBoard()[m.getCurRow()][m.getCurCol()].getColor() == Game.secColor && logicBoard.getSecColorStonesOnBoard() <= 3)
 			return true;
 		
 		int allowedRowDis = 0;
@@ -266,9 +266,9 @@ public class LogicGame {
 	public boolean isWinner(Color _color) 
 	{
 		Color loserColor = _color == Game.firstColor ? Game.secColor : Game.firstColor;
-		if(_color == Game.firstColor && logicBoard.getSecColorStonesLeft() < 3)
+		if(_color == Game.firstColor && logicBoard.getSecColorStonesOnBoard() < 3)
 			return true;
-		if(_color == Game.secColor && logicBoard.getFirstColorStonesLeft() < 3)
+		if(_color == Game.secColor && logicBoard.getFirstColorStonesOnBoard() < 3)
 			return true;
 		if(allPossibleMoves(loserColor).size() == 0)
 			return true;

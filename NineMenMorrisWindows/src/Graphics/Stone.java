@@ -6,6 +6,8 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JPanel;
 
+import Graphics.Board.Phase;
+import Graphics.Board.Status;
 import Logic.AI;
 
 public class Stone extends JPanel{
@@ -15,7 +17,6 @@ public class Stone extends JPanel{
 	private int row; // variables
 	private int col;
 	
-	private boolean isPanelActive = false;
 	private boolean allowed = false;
 	private boolean inTrio = false;
 	private int stoneCenterX = 42;
@@ -38,51 +39,58 @@ public class Stone extends JPanel{
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		if(stoneColor != null) // If there is a stone
+		
+		// There is nothing to draw
+		if(!inTrio && !allowed && stoneColor == null)
+			return;
+		
+		Color currentColor = board.getGame().getCurrentPlayerColor();
+		Color opponentColor = currentColor == Game.firstColor ? Game.secColor : Game.firstColor;
+		
+		if(inTrio) 
 		{
-			g.setColor(inTrio ? Game.trioColor : stoneColor); // Draw Stone
-	    	g.fillOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
-	    	
-	    	g.setColor(g.getColor().darker()); // Normal border
-	    	
-	    	if(!inTrio) // Add glow
-	    	{
-	    		if(board.getLastClickedStone() == this) // Last clicked (Focused) glow
-			    	g.setColor(Game.specificGlowIndicatorColor); 
-	    		
-	    		if(board.getGame().getPlacingPhase()) // Placing phase
-	    		{
-	    			if(board.getIsShouldRemoveStone())
-	    				if(board.getGame().getCurrentPlayerColor() != stoneColor) // Enemy (to remove) color glow
-	    					g.setColor(Game.removeGlowIndicatorColor);
-	    		}
-	    		else // Moving phase
-	    		{
-	    			if(board.getIsShouldRemoveStone())
-	    			{
-	    				if(board.getGame().getCurrentPlayerColor() != stoneColor) // Enemy (to remove) color glow
-	    					g.setColor(Game.removeGlowIndicatorColor);
-	    			}
-	    			else
-	    				if(board.getGame().getCurrentPlayerColor() == stoneColor) // Same color glow (possible stones) 
-	    					g.setColor(Game.globalGlowIndicatorColor);
-	    		}
-	    	}
-	    	g.drawOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
-		}
-		else if(allowed) // Possible allowed next move
-		{
-			g.setColor(Game.allowedColor); // Mark place
+			g.setColor(Game.trioColor);
 			g.fillOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
 			
-			g.setColor(g.getColor().darker()); // Normal border
+			g.setColor(g.getColor().darker());
+			g.drawOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
+		}
+		else if(allowed) 
+		{
+			g.setColor(Game.allowedColor);
+			g.fillOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
+			
+			g.setColor(g.getColor().darker());
+	    	g.drawOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
+		}
+		else if(board.getGamePhase() == Phase.remove) 
+		{
+			g.setColor(stoneColor);
+			g.fillOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
+			
+			g.setColor(stoneColor == opponentColor ? Game.removeGlowIndicatorColor : g.getColor().darker());
+			g.drawOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
+		}
+		else if(board.getGamePhase() == Phase.move)
+		{
+			g.setColor(stoneColor);
+			g.fillOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
+			
+			g.setColor(stoneColor == currentColor ? Game.globalGlowIndicatorColor : g.getColor().darker());
+	    	g.drawOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
+		}
+		else
+		{
+			g.setColor(stoneColor);
+			g.fillOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
+			
+			g.setColor(g.getColor().darker());
 	    	g.drawOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
 		}
 	}
 	
-	public void activate() 
+	public void addMouseListener() 
 	{
-		isPanelActive = true;
 		setCenterValues();
 		
 		addMouseListener(new mouseHandler());
@@ -107,16 +115,16 @@ public class Stone extends JPanel{
 	public class mouseHandler extends MouseAdapter
 	{
 		public void mousePressed(MouseEvent e) 
-		{
-			if(board.getGame().getPlacingPhase() && stoneColor == null && !board.getIsShouldRemoveStone()) // stone-placing phase, and there is no stone on the panel.
-			{
-				drawStone(board.getGame().getCurrentPlayerColor());
-				board.stonePlaced(Stone.this);
-			}
-			else // stone-moving phase or clicked stone clicked on placing phase
-			{
-				board.stoneClicked(Stone.this);
-			}
+		{	
+			// Stone placing phase
+			if(board.getGamePhase() == Phase.place) 
+				board.placeStone(Stone.this);
+			// Stone Moving Phase
+			else if(board.getGamePhase() == Phase.move)
+				board.moveStone(Stone.this, stoneColor != null ? Status.copy : Status.paste);
+			// Stone Remove Phase
+			else
+				board.removeStone(Stone.this);
 		}
 	}
 	

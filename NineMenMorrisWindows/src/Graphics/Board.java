@@ -30,9 +30,25 @@ public class Board extends JPanel{
 	private Game game;
 	private LogicGame logicGame = new LogicGame();
 	
+	private Move currentMove = new Move();
 	private Stone stoneArr[][] = new Stone[7][7];
 	private Stone lastClickedStone = null;
 	private boolean shouldRemoveStone = false;
+	private Phase gamePhase = Phase.place;
+	private Phase prevPhase;
+	
+	public enum Status
+	{
+		copy,
+		paste;
+	}
+	
+	public enum Phase
+	{
+		place,
+		move,
+		remove;
+	}
 	
     public Board(Game _game) {
     	game = _game;
@@ -42,15 +58,14 @@ public class Board extends JPanel{
     	setBounds(0, 0, boardX, boardY);
         image = new ImageIcon("images/GameBoard.png");
         
-        setupStoneMatrix();
-        
+        initBoard();
     }
     
-    public void setupStoneMatrix() 
+    public void initBoard() 
     {
-    	for(int i = 0; i < 7; i++) 
+    	for(int i = 0; i < stoneArr.length; i++) 
     	{
-    		for(int j = 0; j < 7; j++) 
+    		for(int j = 0; j < stoneArr.length; j++) 
     		{
     			stoneArr[i][j] = new Stone(i,j,this); 
     			add(stoneArr[i][j]);
@@ -58,12 +73,12 @@ public class Board extends JPanel{
     	}
     	
     	for(int duoIndex = 0; duoIndex < allowedColArr.length; duoIndex++) 
-    		stoneArr[allowedRowArr[duoIndex]][allowedColArr[duoIndex]].activate();
+    		stoneArr[allowedRowArr[duoIndex]][allowedColArr[duoIndex]].addMouseListener();
     }
     
-    public void stonePlaced(Stone stone) // stone placing phase
-	{	
-		if(game.getPlayerTurn() == 0) 
+    public void updateBox() 
+    {
+    	if(game.getCurrentPlayerColor() == Game.firstColor) 
 		{
 			game.setFirstColorStonesLeft(game.getFirstColorStonesLeft()-1);
 			game.getFirstColorBox().repaint();
@@ -73,73 +88,98 @@ public class Board extends JPanel{
 			game.setSecColorStonesLeft(game.getSecColorStonesLeft()-1);
 			game.getSecColorBox().repaint();
 		}
-		
+    }
+    
+    // stone placing phase
+    public void placeStone(Stone stone)
+	{	
+    	// If there is already a stone
+    	if(stoneArr[stone.getRow()][stone.getCol()].getColor() != null)
+    		return;
+    	
+    	updateBox();
+    	
+    	stone.drawStone(game.getCurrentPlayerColor());
 		logicGame.getLogicBoard().placeStone(stone.getRow(), stone.getCol(), game.getCurrentPlayerColor());
-
-		checkAndMarkForTrio(stone);
 		
-		if(game.getFirstColorStonesLeft() == 0 && game.getSecColorStonesLeft() == 0) // end stone placing phase
-			game.setPlacingPhase(false);
+		// Change game phase
+		if(game.getFirstColorStonesLeft() == 0 && game.getSecColorStonesLeft() == 0) 
+		{
+			gamePhase = Phase.move;
+			repaintAllPanels();
+			checkForWinner();
+		}
 		
-		if(!shouldRemoveStone)
-			game.changeTurn();
+		// If mill exists, dont change turn and return.
+		if(checkForMill(stone)) 
+			return;
 		
-		repaintAllPanels();
+		game.changeTurn();
 	}
     
-    public void stoneClicked(Stone stone) // stone Moving / Removing Phase.
-    {	
-    	if(shouldRemoveStone) 
+    public void moveStone(Stone stone, Status status) 
+    {
+    	// Copy stone
+    	if(status == Status.copy) 
     	{
-    		if(isAllowedToBeRemoved(stone))
-    		{
-    			if(stone.getColor() == Game.firstColor)
-    				logicGame.getLogicBoard().setFirstColorStonesLeft(logicGame.getLogicBoard().getFirstColorStonesLeft() - 1);
-    			else
-    				logicGame.getLogicBoard().setSecColorStonesLeft(logicGame.getLogicBoard().getSecColorStonesLeft() - 1);
-    			
-    			stone.removeStone();
-    			logicGame.getLogicBoard().removeStone(stone.getRow(), stone.getCol());
-    			 
-    			checkForWinner();
-    			
-    			unmarkTrio();
-    			shouldRemoveStone = false;
-    			game.changeTurn();
-    		}
+    		// Wrong color clicked, return.
+    		if(stone.getColor() != game.getCurrentPlayerColor())
+    			return;
+    		
+    		unmarkAllowedMoves();
+    		currentMove.setCurrent(stone.getRow(), stone.getCol());
+    		markAllowedMoves(stone);
     	}
-    	
-    	// moving phase
-    	else if(!game.getPlacingPhase()) 
-    	{	
+    	// Paste stone
+    	else 
+    	{
+    		// Dont have current stone, return.
+    		if(!currentMove.isCurExist())
+    			return;
+    		
+    		currentMove.setNext(stone.getRow(), stone.getCol());
+    		
+    		// Move is not allowed, return.
+    		if(!logicGame.isMoveAllowed(currentMove))
+    			return;
+    		
+			stoneArr[currentMove.getCurRow()][currentMove.getCurCol()].removeStone();
+	    	stoneArr[currentMove.getNextRow()][currentMove.getNextCol()].drawStone(game.getCurrentPlayerColor());
+	    	logicGame.getLogicBoard().moveStone(currentMove);
+    		currentMove.resetMove();
+    		
     		unmarkAllowedMoves();
     		
-    		// "copy" stone
-    		if(stone.getColor() != null && stone.getColor() == game.getCurrentPlayerColor())
-        	{
-        		lastClickedStone = stone;
-        		markAllowedMoves(stone);
-        	}
-    		// "paste" stone
-        	else if(stone.getColor() == null && lastClickedStone != null && logicGame.isMoveAllowed(new Move(lastClickedStone.getRow(), lastClickedStone.getCol(), stone.getRow(), stone.getCol())))
-        	{	
-        		Move m = new Move(lastClickedStone.getRow(), lastClickedStone.getCol(), stone.getRow(), stone.getCol());
-    			stone.drawStone(lastClickedStone.getColor());
-    			lastClickedStone.removeStone();
-    			
-    			logicGame.getLogicBoard().moveStone(m);
-        		
-        		lastClickedStone = null;
-        		
-        		checkAndMarkForTrio(stone);
-        		
-        		checkForWinner();
-        		
-        		if(!shouldRemoveStone)
-        			game.changeTurn();	
-        	}
+    		// If mill exists, dont change turn and return.
+    		if(checkForMill(stone)) 
+    			return;
+    		
+    		checkForWinner();
+    		game.changeTurn();
     	}
+    }
+    
+    public void removeStone(Stone stone) 
+    {
+    	Color oppenentColor = game.getCurrentPlayerColor() == game.firstColor ? game.secColor : game.firstColor;
     	
+    	// if clicks on invalid stone, return.
+    	if(stone.getColor() != oppenentColor)
+    		return;
+    	
+    	// if stone is part of a mill, return.
+    	if(logicGame.isStoneInTrio(new LogicStone(stone)))
+    		return;
+    	
+    	stone.removeStone();
+    	logicGame.getLogicBoard().removeStone(stone.getRow(), stone.getCol());
+    	logicGame.getLogicBoard().decreaseStonesOnBoard(stone.getColor());
+    	
+    	gamePhase = prevPhase;
+    	
+    	checkForWinner();
+    	
+    	game.changeTurn();
     	repaintAllPanels();
     }
     
@@ -153,42 +193,46 @@ public class Board extends JPanel{
 		}
     }
     
-    public boolean isAllowedToBeRemoved(Stone stone) 
-    {
-    	return stone.getColor() != null && stone.getColor() != game.getCurrentPlayerColor() && !logicGame.isStoneInTrio(new LogicStone(stone));
-    }
-    
     public boolean canRemoveAnyStone(Color color)
     {
     	for(int duoIndex = 0; duoIndex < allowedColArr.length; duoIndex++) 
-    		if(stoneArr[allowedRowArr[duoIndex]][allowedColArr[duoIndex]].getColor() == color && !logicGame.isStoneInTrio(new LogicStone(stoneArr[allowedRowArr[duoIndex]][allowedColArr[duoIndex]]))) // right color and can remove
+    		// allow to remove if has the right color and not part of a mill
+    		if(stoneArr[allowedRowArr[duoIndex]][allowedColArr[duoIndex]].getColor() == color && !logicGame.isStoneInTrio(new LogicStone(stoneArr[allowedRowArr[duoIndex]][allowedColArr[duoIndex]])))
     			return true;
     	return false;
     }
     
-    public void checkAndMarkForTrio(Stone stone) 
-    {
-    	ArrayList<LogicStone> logicStoneArr = logicGame.checkCol(new LogicStone(stone));
-    	if(canRemoveAnyStone(stone.getColor() == game.firstColor ? game.secColor : game.firstColor)) // will mark and allow to remove only if you CAN remove 
+    public boolean checkForMill(Stone stone)
+    {	
+    	ArrayList<LogicStone> rowArr = logicGame.checkRow(new LogicStone(stone));
+    	ArrayList<LogicStone> colArr = logicGame.checkCol(new LogicStone(stone));
+    	Color oppenentColor = stone.getColor() == game.firstColor ? game.secColor : game.firstColor;
+    	prevPhase = gamePhase;
+    	
+    	// In case there is nothing possible to remove, return.
+    	if(!canRemoveAnyStone(oppenentColor))
+    		return false;
+    	// checks if there is a mill in a row
+    	if(rowArr != null) 
     	{
-    		if(logicStoneArr != null) // checking cols first
-        	{
-        		markTrio(logicStoneArr);
-        		shouldRemoveStone = true;
-        	}
-        	else
-        	{
-        		logicStoneArr = logicGame.checkRow(new LogicStone(stone));
-        		if(logicStoneArr != null) // checking rows
-        		{
-        			markTrio(logicStoneArr);
-        			shouldRemoveStone = true;
-        		}
-        	}
+    		gamePhase = Phase.remove;
+    		markMill(rowArr);
+    		repaintAllPanels();
+    		return true;
     	}
+    	// checks if there is a mill in a col
+    	if(colArr != null) 
+    	{
+    		gamePhase = Phase.remove;
+    		markMill(colArr);
+    		repaintAllPanels();
+    		return true;
+    	}
+    	
+    	return false;
     }
     
-    public void markTrio(ArrayList<LogicStone> logicStoneArr) 
+    public void markMill(ArrayList<LogicStone> logicStoneArr) 
     {
     	for(int i = 0; i < logicStoneArr.size(); i++) 
 		{
@@ -198,7 +242,7 @@ public class Board extends JPanel{
 		}
     }
     
-    public void unmarkTrio() 
+    public void unmarkMill() 
     {
     	for(int duoIndex = 0; duoIndex < allowedColArr.length; duoIndex++) 
     		stoneArr[allowedRowArr[duoIndex]][allowedColArr[duoIndex]].setInTrio(false);
@@ -212,13 +256,17 @@ public class Board extends JPanel{
 		{
 			Move m = allowedMovesArr.get(i);
 			stoneArr[m.getNextRow()][m.getNextCol()].setAllowed(true);
+			stoneArr[m.getNextRow()][m.getNextCol()].repaint();
 		}
     }
     
     public void unmarkAllowedMoves() 
     {
     	for(int duoIndex = 0; duoIndex < allowedColArr.length; duoIndex++) 
+    	{
     		stoneArr[allowedRowArr[duoIndex]][allowedColArr[duoIndex]].setAllowed(false);
+    		stoneArr[allowedRowArr[duoIndex]][allowedColArr[duoIndex]].repaint();
+    	}
     }
     
     public void repaintAllPanels() 
@@ -248,6 +296,14 @@ public class Board extends JPanel{
 
 	public boolean getIsShouldRemoveStone() {
 		return shouldRemoveStone;
+	}
+
+	public Phase getGamePhase() {
+		return gamePhase;
+	}
+
+	public void setGamePhase(Phase gamePhase) {
+		this.gamePhase = gamePhase;
 	}
 
 	public LogicGame getLogicGame() {

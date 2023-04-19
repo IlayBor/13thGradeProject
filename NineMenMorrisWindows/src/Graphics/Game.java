@@ -34,7 +34,6 @@ public class Game extends JPanel implements ActionListener{
 	private AI Ai; // game logic variables 
 	private int playerTurn = 0; 
 	private Color currentPlayerColor = firstColor;
-	private boolean placingPhase = true;
 	private int firstColorStonesLeft = 9;
 	private int secColorStonesLeft = 9;
 	
@@ -71,6 +70,8 @@ public class Game extends JPanel implements ActionListener{
 	
 	public void changeTurn() 
 	{
+		board.unmarkMill();
+		
 		playerTurn = playerTurn == 0 ? 1 : 0;
 		currentPlayerColor = playerTurn == 0 ? firstColor : secColor;
 		
@@ -78,7 +79,7 @@ public class Game extends JPanel implements ActionListener{
 		{
 			LogicStone AiStone = Ai.getBestStonePlace(getCurrentPlayerColor());
 			board.getStoneArr()[AiStone.getRow()][AiStone.getCol()].drawStone(secColor);
-			board.stonePlaced(board.getStoneArr()[AiStone.getRow()][AiStone.getCol()]);
+			board.placeStone(board.getStoneArr()[AiStone.getRow()][AiStone.getCol()]);
 		}
 	}
 	
@@ -106,14 +107,6 @@ public class Game extends JPanel implements ActionListener{
 
 	public int getPlayerTurn() {
 		return playerTurn;
-	}
-
-	public boolean getPlacingPhase() {
-		return placingPhase;
-	}
-
-	public void setPlacingPhase(boolean isPlacingPhase) {
-		this.placingPhase = isPlacingPhase;
 	}
 
 	public int getFirstColorStonesLeft() {
