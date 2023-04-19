@@ -8,6 +8,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import Graphics.Board.Phase;
 import Logic.AI;
 import Logic.LogicStone;
 
@@ -78,8 +79,8 @@ public class Game extends JPanel implements ActionListener{
 		if(Ai.aiLevel > 0 && currentPlayerColor == secColor) 
 		{
 			LogicStone AiStone = Ai.getBestStonePlace(getCurrentPlayerColor());
-			board.getStoneArr()[AiStone.getRow()][AiStone.getCol()].drawStone(secColor);
-			board.placeStone(board.getStoneArr()[AiStone.getRow()][AiStone.getCol()]);
+			if(board.getGamePhase() == Phase.place)
+				board.placeStone(board.getStoneArr()[AiStone.getRow()][AiStone.getCol()]);
 		}
 	}
 	
