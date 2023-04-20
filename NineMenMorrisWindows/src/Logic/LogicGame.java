@@ -211,33 +211,6 @@ public class LogicGame {
 		return isDuoRow(futureStone) || isDuoCol(futureStone);
 	}
 	
-	public int countTrios(Color curColor) 
-	{
-		ArrayList<Integer> rowsToSkip = new ArrayList<Integer>();
-		ArrayList<Integer> colsToSkip = new ArrayList<Integer>();
-		
-		int counter = 0;
-		
-		for(int duoIndex = 0; duoIndex < Board.allowedColArr.length; duoIndex++) 
-    	{
-			if(logicBoard.getBoard()[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]].getColor() == curColor) 
-			{
-				if(!rowsToSkip.contains(Board.allowedRowArr[duoIndex]) && checkRow(logicBoard.getBoard()[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]]) != null) 
-				{
-					counter++;
-					rowsToSkip.add(Board.allowedRowArr[duoIndex]);
-				}
-				if(!colsToSkip.contains(Board.allowedColArr[duoIndex]) && checkCol(logicBoard.getBoard()[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]]) != null) 
-				{
-					counter++;
-					colsToSkip.add(Board.allowedColArr[duoIndex]);
-				}
-			}
-    	}
-		
-		return counter;
-	}
-	
 	public ArrayList<Move> allPossibleMoves(Color curColor) 
 	{
 		ArrayList<Move> possibleMoves = new ArrayList<Move>();
@@ -247,7 +220,6 @@ public class LogicGame {
 			if(logicBoard.getBoard()[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]].getColor() == curColor) 
 				possibleMoves.addAll(allowedMoves(logicBoard.getBoard()[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]]));
     	}
-		printAllMoves(possibleMoves);
 		return possibleMoves;
 	}
 	

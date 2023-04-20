@@ -22,7 +22,7 @@ public class AI {
 		
 		if(possibleGame.isWinner(futureStone.getColor())) 
 			score += 9;
-		else if(possibleGame.isStoneInTrio(futureStone)) 
+		else if(possibleGame.isStoneInTrio(futureStone))
 			score += 8;
 		else if(possibleGame.isBlockingTrio(futureStone)) 
 			score += 7;
@@ -34,6 +34,39 @@ public class AI {
 			score += 4;
 		else if (possibleGame.allowedMoves(futureStone).size() <= 2)
 			score += possibleGame.allowedMoves(futureStone).size();
+		return score;
+	}
+	
+	public int evaluate(Move move) 
+	{
+		int score = 0;
+		Color color = logicGame.getLogicBoard().getBoard()[move.getCurRow()][move.getCurCol()].getColor();
+		LogicStone futureStone = new LogicStone(move.getNextRow(), move.getNextCol(), color);
+		LogicBoard boardAfterMove = new LogicBoard(this.logicGame.getLogicBoard());
+		LogicGame possibleGame = new LogicGame(boardAfterMove);
+		boardAfterMove.moveStone(move);
+		
+		if(possibleGame.isWinner(futureStone.getColor())) 
+			score += 9;
+		if(possibleGame.isStoneInTrio(futureStone))
+			score += 8;
+		else if(possibleGame.isBlockingTrio(futureStone)) 
+			score += 7;
+		else if(possibleGame.allowedMoves(futureStone).size() == 4)
+			score += 6;
+		else if(possibleGame.allowedMoves(futureStone).size() == 3)
+			score += 5;
+		else if(possibleGame.isCreatingDuo(futureStone))
+			score += 4;
+		else if (possibleGame.allowedMoves(futureStone).size() <= 2)
+			score += possibleGame.allowedMoves(futureStone).size();
+		
+		
+		boardAfterMove.printLogicBoard();
+		System.out.println(move);
+		System.out.println("score: " +score);
+		System.out.println(possibleGame.isStoneInTrio(futureStone));
+		
 		return score;
 	}
 	
@@ -60,12 +93,12 @@ public class AI {
 	{
 		ArrayList<Move> possibleMoves = logicGame.allPossibleMoves(color);
 		Move bestMove = possibleMoves.get(0);
-		int maxScore = evaluate(new LogicStone(bestMove.getNextRow(), bestMove.getNextCol(), color));
+		int maxScore = evaluate(bestMove);
 		for(int i = 1; i < possibleMoves.size(); i++) 
 		{
 			Move curMove = possibleMoves.get(i);
-			int curScore = evaluate(new LogicStone(curMove.getNextRow(), curMove.getNextCol(), color));
-			if(curScore > maxScore) 
+			int curScore = evaluate(curMove);
+			if(curScore >= maxScore) 
 			{
 				bestMove = curMove;
 				maxScore = curScore;
@@ -73,6 +106,7 @@ public class AI {
 		}
 		System.out.printf("Chose Move from %d %d to %d %d with score %d\n", 
 				bestMove.getCurRow(), bestMove.getCurCol(), bestMove.getNextRow(), bestMove.getNextCol(), maxScore);
+		System.out.println("------------------------------------------------------------------------------");
 		return bestMove;
 	}
 	
