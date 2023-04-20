@@ -45,6 +45,7 @@ public class Stone extends JPanel{
 		Color currentColor = board.getGame().getCurrentPlayerColor();
 		Color opponentColor = currentColor == Game.firstColor ? Game.secColor : Game.firstColor;
 		
+		// Is in mill
 		if(isInMill) 
 		{
 			g.setColor(Game.trioColor);
@@ -53,6 +54,7 @@ public class Stone extends JPanel{
 			g.setColor(g.getColor().darker());
 			g.drawOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
 		}
+		// In allowed move
 		else if(isAllowedMove) 
 		{
 			g.setColor(Game.allowedColor);
@@ -61,6 +63,7 @@ public class Stone extends JPanel{
 			g.setColor(g.getColor().darker());
 	    	g.drawOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
 		}
+		// Remove game phase
 		else if(board.getGamePhase() == Phase.remove) 
 		{
 			g.setColor(color);
@@ -69,6 +72,7 @@ public class Stone extends JPanel{
 			g.setColor(color == opponentColor ? Game.removeGlowIndicatorColor : g.getColor().darker());
 			g.drawOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
 		}
+		// Move game phase
 		else if(board.getGamePhase() == Phase.move)
 		{
 			g.setColor(color);
@@ -77,6 +81,7 @@ public class Stone extends JPanel{
 			g.setColor(color == currentColor ? Game.globalGlowIndicatorColor : g.getColor().darker());
 	    	g.drawOval(stoneCenterX - stoneSize/2, stoneCenterY - stoneSize/2, stoneSize, stoneSize);
 		}
+		// Place game phase
 		else
 		{
 			g.setColor(color);

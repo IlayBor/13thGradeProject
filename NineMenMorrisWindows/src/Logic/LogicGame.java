@@ -247,6 +247,7 @@ public class LogicGame {
 			if(logicBoard.getBoard()[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]].getColor() == curColor) 
 				possibleMoves.addAll(allowedMoves(logicBoard.getBoard()[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]]));
     	}
+		printAllMoves(possibleMoves);
 		return possibleMoves;
 	}
 	
@@ -275,13 +276,13 @@ public class LogicGame {
 		return false;
 	}
 	
-	public void printAllMoves(ArrayList<LogicStone> possibleMoves) 
+	public void printAllMoves(ArrayList<Move> possibleMoves) 
 	{
 		System.out.println("-------------------------");
 		for(int i = 0; i < possibleMoves.size(); i++) 
 		{
-			LogicStone logicStone = possibleMoves.get(i);
-			System.out.println("Row:" + logicStone.getRow() + " Col:" + logicStone.getCol());
+			Move move = possibleMoves.get(i);
+			System.out.printf("From: %d %d To %d %d \n", move.getCurRow(), move.getCurCol(), move.getNextRow(), move.getNextCol());
 		}
 		System.out.print("size: ");
 		System.out.println(possibleMoves.size());

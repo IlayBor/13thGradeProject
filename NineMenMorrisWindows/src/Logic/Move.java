@@ -55,6 +55,13 @@ public class Move {
 		this.nextRow = -1;
 		this.nextCol = -1;
 	}
+
+	@Override
+	public String toString() {
+		return "Move [curRow=" + curRow + ", curCol=" + curCol + ", nextRow=" + nextRow + ", nextCol=" + nextCol + "]";
+	}
+	
+	
 }
 
 

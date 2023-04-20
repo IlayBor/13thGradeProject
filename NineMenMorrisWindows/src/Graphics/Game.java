@@ -9,8 +9,10 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import Graphics.Board.Phase;
+import Graphics.Board.Status;
 import Logic.AI;
 import Logic.LogicStone;
+import Logic.Move;
 
 public class Game extends JPanel implements ActionListener{
 	public static Color firstColor = new Color(255,255,255,255); // game static colors
@@ -78,9 +80,32 @@ public class Game extends JPanel implements ActionListener{
 		
 		if(Ai.aiLevel > 0 && currentPlayerColor == secColor) 
 		{
-			LogicStone AiStone = Ai.getBestStonePlace(getCurrentPlayerColor());
-			if(board.getGamePhase() == Phase.place)
-				board.placeStone(board.getStoneArr()[AiStone.getRow()][AiStone.getCol()]);
+			AiTurn(secColor);
+		}
+	}
+	
+	public void AiTurn(Color AiColor) 
+	{	
+		// AI Timer
+		if(board.getGamePhase() == Phase.place) 
+		{
+			LogicStone AiStone = Ai.getBestStonePlace(AiColor);
+			board.placeStone(board.getStoneArr()[AiStone.getRow()][AiStone.getCol()]);
+		}
+		else if(board.getGamePhase() == Phase.move) 
+		{
+			Move bestMove = Ai.getBestMove(AiColor);
+			Stone curStone = board.getStoneArr()[bestMove.getCurRow()][bestMove.getCurCol()];
+			Stone nextStone = board.getStoneArr()[bestMove.getNextRow()][bestMove.getNextCol()];
+			board.moveStone(curStone, Status.copy);
+			board.moveStone(nextStone, Status.paste);
+		}
+		else 
+		{
+			Color enemyColor = AiColor == Game.firstColor ? Game.secColor : Game.firstColor;
+			LogicStone logicStoneToRemove = Ai.getBestStoneToRemove(enemyColor);
+			Stone stoneToRemove = board.getStoneArr()[logicStoneToRemove.getRow()][logicStoneToRemove.getCol()];
+			board.removeStone(stoneToRemove);
 		}
 	}
 	
