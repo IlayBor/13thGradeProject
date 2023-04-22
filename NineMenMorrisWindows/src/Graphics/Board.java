@@ -216,6 +216,9 @@ public class Board extends JPanel{
     		gamePhase = Phase.remove;
     		markMill(rowArr);
     		repaintAllPanels();
+    		
+    		if(AI.aiLevel > 0 && stone.getColor() == game.secColor) 
+    			game.getAi().AiTurn();
     		return true;
     	}
     	// checks if there is a mill in a col
@@ -224,6 +227,10 @@ public class Board extends JPanel{
     		gamePhase = Phase.remove;
     		markMill(colArr);
     		repaintAllPanels();
+    		
+    		if(AI.aiLevel > 0 && stone.getColor() == game.secColor) 
+    			game.getAi().AiTurn();
+    		
     		return true;
     	}
     	
@@ -290,6 +297,10 @@ public class Board extends JPanel{
 
 	public Phase getGamePhase() {
 		return gamePhase;
+	}
+
+	public Phase getPrevPhase() {
+		return prevPhase;
 	}
 
 	public LogicGame getLogicGame() {

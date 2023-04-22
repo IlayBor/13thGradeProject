@@ -118,15 +118,19 @@ public class Stone extends JPanel{
 	{
 		public void mousePressed(MouseEvent e) 
 		{	
-			// Stone placing phase
-			if(board.getGamePhase() == Phase.place) 
-				board.placeStone(Stone.this);
-			// Stone Moving Phase
-			else if(board.getGamePhase() == Phase.move)
-				board.moveStone(Stone.this, color != null ? Status.copy : Status.paste);
-			// Stone Remove Phase
-			else
-				board.removeStone(Stone.this);
+			// If there is ai, allow to play only when its your turn.
+			if(!(AI.aiLevel > 0 && board.getGame().getCurrentPlayerColor() == AI.aiColor))
+			{
+				// Stone placing phase
+				if(board.getGamePhase() == Phase.place) 
+					board.placeStone(Stone.this);
+				// Stone Moving Phase
+				else if(board.getGamePhase() == Phase.move)
+					board.moveStone(Stone.this, color != null ? Status.copy : Status.paste);
+				// Stone Remove Phase
+				else
+					board.removeStone(Stone.this);
+			}	
 		}
 	}
 	
@@ -149,7 +153,7 @@ public class Stone extends JPanel{
 	public int getCol() {
 		return col;
 	}
-
+	
 	public void setCenterValues() 
 	{
 		switch(row) 

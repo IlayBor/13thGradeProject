@@ -15,7 +15,7 @@ import Logic.LogicStone;
 import Logic.Move;
 
 public class Game extends JPanel implements ActionListener{
-	public static Color firstColor = new Color(255,255,255,255); // game static colors
+	public static Color firstColor = new Color(255,255,255,255); // Game visuals.
 	public static Color secColor = new Color(0,0,0,255); 
 	
 	public static Color defaultIndicator = Color.black; 
@@ -26,7 +26,7 @@ public class Game extends JPanel implements ActionListener{
 	public static Color allowedColor = Color.MAGENTA; 
 	public static Color trioColor = Color.green; 
 	
-	private Frame frame; // game visual variables
+	private Frame frame; // Game elements
 	private Board board;
 	private Box firstColorBox;
 	private Box secColorBox;
@@ -34,7 +34,7 @@ public class Game extends JPanel implements ActionListener{
 	private JButton resetButton;
 	private ImageIcon image;
 	
-	private AI Ai; // game logic variables 
+	private AI Ai; // Game variables 
 	private int playerTurn = 0; 
 	private Color currentPlayerColor = firstColor;
 	private int firstColorStonesLeft = 9;
@@ -50,7 +50,9 @@ public class Game extends JPanel implements ActionListener{
 		board = new Board(this);
 		board.setBounds(Frame.frameX/2-Board.boardX/2 , 0, Board.boardX,Board.boardY );
 		add(board);
-		Ai = new AI(board.getLogicGame());
+		
+		if(Ai.aiLevel > 0)
+			Ai = new AI(board);
 		
 		firstColorBox = new Box(firstColor, this);
 		firstColorBox.setBounds(Frame.frameX/2+Board.boardX/2 + 40,100,Box.boxXSize, Box.boxYSize);
@@ -80,32 +82,7 @@ public class Game extends JPanel implements ActionListener{
 		
 		if(Ai.aiLevel > 0 && currentPlayerColor == secColor) 
 		{
-			AiTurn(secColor);
-		}
-	}
-	
-	public void AiTurn(Color AiColor) 
-	{	
-		// AI Timer
-		if(board.getGamePhase() == Phase.place) 
-		{
-			LogicStone AiStone = Ai.getBestStonePlace(AiColor);
-			board.placeStone(board.getStoneArr()[AiStone.getRow()][AiStone.getCol()]);
-		}
-		else if(board.getGamePhase() == Phase.move) 
-		{
-			Move bestMove = Ai.getBestMove(AiColor);
-			Stone curStone = board.getStoneArr()[bestMove.getCurRow()][bestMove.getCurCol()];
-			Stone nextStone = board.getStoneArr()[bestMove.getNextRow()][bestMove.getNextCol()];
-			board.moveStone(curStone, Status.copy);
-			board.moveStone(nextStone, Status.paste);
-		}
-		else 
-		{
-			Color enemyColor = AiColor == Game.firstColor ? Game.secColor : Game.firstColor;
-			LogicStone logicStoneToRemove = Ai.getBestStoneToRemove(enemyColor);
-			Stone stoneToRemove = board.getStoneArr()[logicStoneToRemove.getRow()][logicStoneToRemove.getCol()];
-			board.removeStone(stoneToRemove);
+			Ai.AiTurn();
 		}
 	}
 	
@@ -157,5 +134,9 @@ public class Game extends JPanel implements ActionListener{
 	
 	public Color getCurrentPlayerColor() {
 		return currentPlayerColor;
+	}
+
+	public AI getAi() {
+		return Ai;
 	}
 }

@@ -55,4 +55,8 @@ public class LogicStone {
 	{
 		return color == null ? true : false;
 	}
+	
+	public String toString() {
+		return String.format("[%d,%d]", row, col);
+	}
 }

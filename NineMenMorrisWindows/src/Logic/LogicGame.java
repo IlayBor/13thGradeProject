@@ -236,6 +236,17 @@ public class LogicGame {
 		return possibleStonePlaces;
 	}
 	
+	public ArrayList<LogicStone> getAllStonesOnBoard(Color color)
+	{
+		ArrayList<LogicStone> stones = new ArrayList<LogicStone>();
+		for(int duoIndex = 0; duoIndex < Board.allowedColArr.length; duoIndex++) 
+    	{
+			if(logicBoard.getBoard()[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]].getColor() == color)
+				stones.add(new LogicStone(Board.allowedRowArr[duoIndex], Board.allowedColArr[duoIndex], color));
+    	}
+		return stones;
+	}
+	
 	public boolean isWinner(Color _color) 
 	{
 		Color loserColor = _color == Game.firstColor ? Game.secColor : Game.firstColor;
