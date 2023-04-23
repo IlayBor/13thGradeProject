@@ -223,19 +223,6 @@ public class LogicGame {
 		return possibleMoves;
 	}
 	
-	public ArrayList<LogicStone> allPossibleStonePlaces(Color curColor)
-	{
-		ArrayList<LogicStone> possibleStonePlaces = new ArrayList<LogicStone>();
-		
-		for(int duoIndex = 0; duoIndex < Board.allowedColArr.length; duoIndex++) 
-    	{
-			if(logicBoard.getBoard()[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]].getColor() == null) 
-				possibleStonePlaces.add(new LogicStone(Board.allowedRowArr[duoIndex], Board.allowedColArr[duoIndex], curColor));
-    	}
-		
-		return possibleStonePlaces;
-	}
-	
 	public ArrayList<LogicStone> getAllStonesOnBoard(Color color)
 	{
 		ArrayList<LogicStone> stones = new ArrayList<LogicStone>();

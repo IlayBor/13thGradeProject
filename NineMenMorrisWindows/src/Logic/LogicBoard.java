@@ -47,6 +47,12 @@ public class LogicBoard {
 			board[row][col].setColor(color);
 	}
 	
+	public void placeStone(LogicStone stone) 
+	{
+		if(stone.getColor() != null)
+			placeStone(stone.getRow(), stone.getCol(), stone.getColor());
+	}
+	
 	public void removeStone(int row, int col) 
 	{
 		placeStone(row, col, null);

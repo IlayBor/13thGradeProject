@@ -35,7 +35,6 @@ public class Game extends JPanel implements ActionListener{
 	private ImageIcon image;
 	
 	private AI Ai; // Game variables 
-	private int playerTurn = 0; 
 	private Color currentPlayerColor = firstColor;
 	private int firstColorStonesLeft = 9;
 	private int secColorStonesLeft = 9;
@@ -77,8 +76,7 @@ public class Game extends JPanel implements ActionListener{
 	{
 		board.unmarkMill();
 		
-		playerTurn = playerTurn == 0 ? 1 : 0;
-		currentPlayerColor = playerTurn == 0 ? firstColor : secColor;
+		currentPlayerColor = currentPlayerColor == Game.firstColor ? secColor : firstColor;
 		
 		if(Ai.aiLevel > 0 && currentPlayerColor == secColor) 
 		{
@@ -110,10 +108,6 @@ public class Game extends JPanel implements ActionListener{
 
 	public Box getSecColorBox() {
 		return secColorBox;
-	}
-
-	public int getPlayerTurn() {
-		return playerTurn;
 	}
 
 	public int getFirstColorStonesLeft() {

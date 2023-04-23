@@ -163,7 +163,7 @@ public class Board extends JPanel{
     	
     	stone.removeStone();
     	logicGame.getLogicBoard().removeStone(stone.getRow(), stone.getCol());
-    	logicGame.getLogicBoard().decreaseStonesOnBoard(stone.getColor());
+    	logicGame.getLogicBoard().decreaseStonesOnBoard(oppenentColor);
     	
     	gamePhase = prevPhase;
     	

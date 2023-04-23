@@ -44,7 +44,7 @@ public class AI {
 		if(graphicBoard.getGamePhase() == Phase.place) 
 		{
 			LogicStone AiStone = getBestStonePlace(aiColor);
-			System.out.println(String.format("Ai Placed: %s. Score: %d", AiStone, evaluate(AiStone)));
+			System.out.println(String.format("Ai Placed: %s. Score: %d", AiStone, evaluate(AiStone, aiColor)));
 			graphicBoard.placeStone(graphicBoard.getStoneArr()[AiStone.getRow()][AiStone.getCol()]);
 		}
 		// Moving Phase
@@ -53,7 +53,7 @@ public class AI {
 			Move bestMove = getBestMove(aiColor);
 			Stone curStone = graphicBoard.getStoneArr()[bestMove.getCurRow()][bestMove.getCurCol()];
 			Stone nextStone = graphicBoard.getStoneArr()[bestMove.getNextRow()][bestMove.getNextCol()];
-			System.out.println(String.format("Ai Moved: %s. Score: %d", bestMove, evaluate(bestMove)));
+			System.out.println(String.format("Ai Moved: %s. Score: %d", bestMove, evaluate(bestMove, aiColor)));
 			graphicBoard.moveStone(curStone, Status.copy);
 			graphicBoard.moveStone(nextStone, Status.paste);
 		}
@@ -63,16 +63,18 @@ public class AI {
 			Color enemyColor = aiColor == Game.firstColor ? Game.secColor : Game.firstColor;
 			LogicStone logicStoneToRemove = getBestStoneToRemove(enemyColor, graphicBoard.getPrevPhase());
 			Stone stoneToRemove = graphicBoard.getStoneArr()[logicStoneToRemove.getRow()][logicStoneToRemove.getCol()];
-			System.out.println(String.format("Ai Removed: %s. Score: %d", logicStoneToRemove, evaluate(logicStoneToRemove)));
+			System.out.println(String.format("Ai Removed: %s. Score: %d", logicStoneToRemove, evaluate(logicStoneToRemove, aiColor == Game.firstColor ? Game.secColor : Game.firstColor)));
 			graphicBoard.removeStone(stoneToRemove);
 		}
 	}
 	
-	public int evaluate(LogicStone futureStone) 
+	// color problem
+	public int evaluate(LogicStone futureStone, Color futureColor) 
 	{
 		int score = 0;
 		LogicBoard boardAfterMove = new LogicBoard(this.logicGame.getLogicBoard());
-		boardAfterMove.placeStone(futureStone.getRow(), futureStone.getCol(), futureStone.getColor());
+		futureStone.setColor(futureColor);
+		boardAfterMove.placeStone(futureStone);
 		LogicGame possibleGame = new LogicGame(boardAfterMove);
 		
 		if(possibleGame.isWinner(futureStone.getColor())) 
@@ -94,14 +96,15 @@ public class AI {
 	
 	public LogicStone getBestStonePlace(Color color) 
 	{
-		ArrayList<LogicStone> possiblePlaces = logicGame.allPossibleStonePlaces(color);
-		LogicStone bestPlace = possiblePlaces.get(0);
-		int maxScore = evaluate(bestPlace);
+		ArrayList<LogicStone> possiblePlaces = logicGame.getAllStonesOnBoard(null);
+		LogicStone bestPlace = null;
+		int maxScore = -1;
 		
-		for(int i = 1; i < possiblePlaces.size(); i++) 
+		for(int i = 0; i < possiblePlaces.size(); i++) 
 		{
 			LogicStone curPlace = possiblePlaces.get(i);
-			int curScore = evaluate(curPlace);
+			int curScore = evaluate(curPlace, color);
+			
 			if(curScore > maxScore) 
 			{
 				bestPlace = curPlace;
@@ -111,10 +114,9 @@ public class AI {
 		return bestPlace;
 	}
 	
-	public int evaluate(Move move) 
+	public int evaluate(Move move, Color color) 
 	{
 		int score = 0;
-		Color color = logicGame.getLogicBoard().getBoard()[move.getCurRow()][move.getCurCol()].getColor();
 		LogicStone futureStone = new LogicStone(move.getNextRow(), move.getNextCol(), color);
 		LogicBoard boardAfterMove = new LogicBoard(this.logicGame.getLogicBoard());
 		LogicGame possibleGame = new LogicGame(boardAfterMove);
@@ -122,7 +124,7 @@ public class AI {
 		
 		if(possibleGame.isWinner(futureStone.getColor())) 
 			score += 50;
-		if(possibleGame.isStoneInTrio(futureStone))
+		else if(possibleGame.isStoneInTrio(futureStone)) 
 			score += 10;
 		else if(possibleGame.isBlockingTrio(futureStone)) 
 			score += 8;
@@ -153,8 +155,9 @@ public class AI {
 	private Move getMoveDesc(Color color, int rate) 
 	{
 		ArrayList<Move> possibleMoves = logicGame.allPossibleMoves(color);
+		//System.out.println(possibleMoves.size());
 		for(Move m : possibleMoves)
-			evaluate(m);
+			evaluate(m, color);
 		
 		Collections.sort(possibleMoves, Collections.reverseOrder());
 		return possibleMoves.get(rate - 1);
@@ -173,16 +176,16 @@ public class AI {
 	private LogicStone bestStoneToRemovePlacePhase(Color enemyColor) 
 	{
 		ArrayList<LogicStone> stones = logicGame.getAllStonesOnBoard(enemyColor);
-		LogicStone bestStone = stones.get(0);
-		int maxScore = evaluate(bestStone);
+		LogicStone bestStone = null;
+		int maxScore = -1;
 		
-		for(int i = 1; i < stones.size(); i++) 
+		for(int i = 0; i < stones.size(); i++) 
 		{
 			LogicStone curStone = stones.get(i);
 			// If stone not in a mill, allow to remove.
 			if(!logicGame.isStoneInTrio(curStone)) 
 			{
-				int curScore = evaluate(curStone);
+				int curScore = evaluate(curStone, enemyColor);
 				if(curScore > maxScore) 
 				{
 					bestStone = curStone;
@@ -207,16 +210,5 @@ public class AI {
 		
 		// If reached here, cannot remove any future move, instead remove a stuck stone.
 		return bestStoneToRemovePlacePhase(enemyColor);
-	}
-	
-	public void printAllBoards(Color color) 
-	{
-		ArrayList<Move> possibleMoves = logicGame.allPossibleMoves(color);
-		for(int i = 0; i < possibleMoves.size(); i++) 
-		{
-			Move m = possibleMoves.get(i);
-			System.out.printf("-------Move %d------\n", i);
-			System.out.printf("Move Info: from %d %d to %d %d\n", m.getCurRow(), m.getCurCol(), m.getNextRow(), m.getNextCol());
-		}
 	}
 }

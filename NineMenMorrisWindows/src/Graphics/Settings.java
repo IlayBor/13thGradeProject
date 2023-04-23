@@ -22,7 +22,7 @@ import Logic.LogicGame;
 public class Settings extends JPanel implements ActionListener{
 	private Frame frame;
 	private JButton backButton;
-	private String[] options = {"None", "Easy", "Medium", "Hard"}; 
+	private String[] options = {"Human", "Easy", "Medium", "Hard"}; 
 	private JComboBox comboBox; 
 	private ImageIcon image;
 	private JLabel label;
@@ -33,7 +33,7 @@ public class Settings extends JPanel implements ActionListener{
 		setLayout(null);
 		image = new ImageIcon("images/BackgroundImage.jpeg");
 		
-		label = new JLabel("AI Level:", SwingConstants.CENTER);
+		label = new JLabel("Difficulty:", SwingConstants.CENTER);
 		label.setFont(new Font("Ariel", Font.PLAIN, 28));
 		label.setBounds(320,330,300,50);
 		label.setSize(150,50);
