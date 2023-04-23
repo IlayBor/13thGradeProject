@@ -69,7 +69,7 @@ public class LogicGame {
 		
 		for(int duoIndex = 0; duoIndex < Board.allowedColArr.length; duoIndex++) 
 		{
-			if(logicBoard.getBoard()[LogicBoard.allowedRowArr[duoIndex]][LogicBoard.allowedColArr[duoIndex]].isEmpty()) 
+			if(logicBoard.getBoard()[LogicBoard.allowedRowArr[duoIndex]][LogicBoard.allowedColArr[duoIndex]].getColor() == null) 
 			{
 				Move m = new Move(stone.getRow(), stone.getCol(), LogicBoard.allowedRowArr[duoIndex], LogicBoard.allowedColArr[duoIndex]);
 				if(isMoveAllowed(m))
@@ -162,8 +162,9 @@ public class LogicGame {
 	
 	public boolean isDuoRow(LogicStone futureStone) 
 	{
-		int emptySpaces = 0;
-		boolean isSameColor = false;
+		int stonesInRow = 0;
+		Color color = futureStone.getColor();
+		Color opponentColor = color == Game.firstColor ? Game.secColor : Game.firstColor;
 		
 		int rowToCheck = futureStone.getRow();
 		int startCol = (rowToCheck == 3) ? futureStone.getCol() < 3 ? 0 : 4 : 0;
@@ -173,37 +174,41 @@ public class LogicGame {
 		{
 			// if exists
 			if(logicBoard.getBoard()[rowToCheck][curCol] != null)
-				// if have 2 empty spaces
-				if(logicBoard.getBoard()[rowToCheck][curCol].isEmpty())
-					emptySpaces++;
+				// if have 2 right colored stones
+				if(logicBoard.getBoard()[rowToCheck][curCol].getColor() == color)
+					stonesInRow++;
 				// if have a stone in the wrong color
-				else if(logicBoard.getBoard()[rowToCheck][curCol].getColor() != futureStone.getColor())
+				else if(logicBoard.getBoard()[rowToCheck][curCol].getColor() == opponentColor)
 					return false;
 		}
-		return (emptySpaces == 2);
+		return (stonesInRow == 2);
 	} 
 	
 	public boolean isDuoCol(LogicStone futureStone) 
 	{
-		int emptySpaces = 0;
-		boolean isSameColor = false;
+		int stonesInCol = 0;
+		Color color = futureStone.getColor();
+		Color opponentColor = color == Game.firstColor ? Game.secColor : Game.firstColor;
 		
 		int colToCheck = futureStone.getCol();
 		int startRow = (colToCheck == 3) ? futureStone.getRow() < 3 ? 0 : 4 : 0;
 		int endRow = (colToCheck == 3) ? futureStone.getRow() < 3 ? 3 : 7: 7;
 		
+		if((logicBoard.getFirstColorStonesOnBoard() <= 3 || logicBoard.getSecColorStonesOnBoard() <= 3) && color == AI.aiColor)
+			logicBoard.printLogicBoard();
+		
 		for(int curRow = startRow; curRow < endRow; curRow++) 
 		{
 			// if exists
 			if(logicBoard.getBoard()[curRow][colToCheck] != null)
-				// if have 2 empty spaces
-				if(logicBoard.getBoard()[curRow][colToCheck].isEmpty())
-					emptySpaces++;
+				// if have 2 right colored stones
+				if(logicBoard.getBoard()[curRow][colToCheck].getColor() == color)
+					stonesInCol++;
 				// if have a stone in the wrong color
-				else if(logicBoard.getBoard()[curRow][colToCheck].getColor() != futureStone.getColor())
+				else if(logicBoard.getBoard()[curRow][colToCheck].getColor() == opponentColor)
 					return false;
 		}
-		return (emptySpaces == 2);
+		return (stonesInCol == 2);
 	}
 	
 	public boolean isCreatingDuo(LogicStone futureStone) 

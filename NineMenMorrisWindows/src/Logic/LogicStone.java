@@ -51,11 +51,6 @@ public class LogicStone {
 		return initialized;
 	}
 	
-	public boolean isEmpty() 
-	{
-		return color == null ? true : false;
-	}
-	
 	public String toString() {
 		return String.format("[%d,%d]", row, col);
 	}
