@@ -194,9 +194,6 @@ public class LogicGame {
 		int startRow = (colToCheck == 3) ? futureStone.getRow() < 3 ? 0 : 4 : 0;
 		int endRow = (colToCheck == 3) ? futureStone.getRow() < 3 ? 3 : 7: 7;
 		
-		if((logicBoard.getFirstColorStonesOnBoard() <= 3 || logicBoard.getSecColorStonesOnBoard() <= 3) && color == AI.aiColor)
-			logicBoard.printLogicBoard();
-		
 		for(int curRow = startRow; curRow < endRow; curRow++) 
 		{
 			// if exists
