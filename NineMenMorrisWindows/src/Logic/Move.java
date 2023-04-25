@@ -52,7 +52,11 @@ public class Move implements Comparable{
 	public void setScore(int score) {
 		this.score = score;
 	}
-
+	
+	public void addScore(int score) {
+		this.score += score;
+	}
+	
 	public boolean isCurExist() 
 	{
 		return (this.curRow != -1 && this.curRow != -1);
