@@ -215,7 +215,8 @@ public class AI {
 				LogicBoard testBoard = new LogicBoard(board);
 				testBoard.moveStone(bestMoves.get(i));
 				bestMoves.get(i).addScore(
-						getBestMove(testBoard, color == Game.firstColor ? Game.secColor : Game.firstColor, depth-1).getScore() * -1);
+						getBestMove(testBoard, color == Game.firstColor ? Game.secColor : Game.firstColor, depth-1).getScore() * 
+						(color == aiColor ? 1 : -1));
 				
 				if(bestMoves.get(i).getScore() > bestMoves.get(bestScoreIndex).getScore())
 					bestScoreIndex = i;
