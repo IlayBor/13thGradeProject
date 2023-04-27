@@ -63,6 +63,11 @@ public class LogicBoard {
 		placeStone(row, col, null);
 	}
 	
+	public void removeStone(LogicStone stone) 
+	{
+		removeStone(stone.getRow(), stone.getCol());
+	}
+	
 	public void moveStone(Move m) 
 	{
 		placeStone(m.getNextRow(), m.getNextCol(), board[m.getCurRow()][m.getCurCol()].getColor());
@@ -79,13 +84,13 @@ public class LogicBoard {
 	
 	public void printLogicBoard() 
 	{
-		System.out.println("-----------------------------------");
 		for(int row = 0; row < 7; row++) 
 		{
 			for(int col = 0; col < 7; col++)
 				System.out.printf("%2c" ,getSign(board[row][col]));
 			System.out.println();
 		}
+		System.out.println("-----------------------------------");
 	}
 	
 	public char getSign(LogicStone logicStone) 
