@@ -13,6 +13,11 @@ public class Move implements Comparable{
 		this.score = 0;
 	}
 	
+	public Move(int curRow, int curCol, int nextRow, int nextCol, int score) {
+	    this(curRow, curCol, nextRow, nextCol);
+	    this.score = score;
+	}
+	
 	public Move() {
 		resetMove();
 	}

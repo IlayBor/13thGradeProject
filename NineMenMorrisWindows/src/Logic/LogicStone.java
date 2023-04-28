@@ -4,16 +4,14 @@ import java.awt.Color;
 import Graphics.Stone;
 
 public class LogicStone {
-	private int row, col;
-	private Color color;
-	private boolean initialized = false;
+	protected int row, col;
+	protected Color color;
 	
 	public LogicStone(int _row, int _col, Color _color) 
 	{
 		row = _row;
 		col = _col;
 		color = _color;
-		initialized = true;
 	}
 	
 	public LogicStone(Stone toCopy) 
@@ -44,11 +42,6 @@ public class LogicStone {
 	
 	public void setColor(Color color) {
 		this.color = color;
-	}
-	
-	public boolean initialized() 
-	{
-		return initialized;
 	}
 	
 	public String toString() {

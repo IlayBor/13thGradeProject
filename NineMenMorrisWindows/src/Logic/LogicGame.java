@@ -118,6 +118,17 @@ public class LogicGame {
 		return checkCol(stone) != null || checkRow(stone) != null;
 	}
 	
+	public boolean canRemoveAnyStone(Color color) 
+	{
+		for(int duoIndex = 0; duoIndex < LogicBoard.allowedColArr.length; duoIndex++) 
+		{
+			LogicStone curStone = logicBoard.getBoard()[LogicBoard.allowedRowArr[duoIndex]][LogicBoard.allowedColArr[duoIndex]];
+			if(curStone.getColor() == color && !isStoneInTrio(curStone)) 
+				return true;
+		}
+    	return false;
+	}
+	
 	public boolean isBlockingRow(LogicStone futureStone) 
 	{
 		Color opponentColor = futureStone.getColor() == Game.firstColor ? Game.secColor : Game.firstColor; 
@@ -267,6 +278,4 @@ public class LogicGame {
 	public void setLogicBoard(LogicBoard logicBoard) {
 		this.logicBoard = logicBoard;
 	}
-	
-	
 }

@@ -191,15 +191,6 @@ public class Board extends JPanel{
 			game.getSecColorBox().repaint();
     }
     
-    public boolean canRemoveAnyStone(Color color)
-    {
-    	for(int duoIndex = 0; duoIndex < allowedColArr.length; duoIndex++) 
-    		// allow to remove if has the right color and not part of a mill
-    		if(stoneArr[allowedRowArr[duoIndex]][allowedColArr[duoIndex]].getColor() == color && !logicGame.isStoneInTrio(new LogicStone(stoneArr[allowedRowArr[duoIndex]][allowedColArr[duoIndex]])))
-    			return true;
-    	return false;
-    }
-    
     public boolean checkForMill(Stone stone)
     {	
     	ArrayList<LogicStone> rowArr = logicGame.checkRow(new LogicStone(stone));
@@ -208,7 +199,7 @@ public class Board extends JPanel{
     	prevPhase = gamePhase;
     	
     	// In case there is nothing possible to remove, return.
-    	if(!canRemoveAnyStone(oppenentColor))
+    	if(!logicGame.canRemoveAnyStone(oppenentColor))
     		return false;
     	// checks if there is a mill in a row
     	if(rowArr != null) 
