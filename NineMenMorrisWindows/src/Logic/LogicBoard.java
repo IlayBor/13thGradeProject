@@ -18,6 +18,7 @@ public class LogicBoard {
 	
 	private int firstColorStonesOnBoard = 9;
 	private int secColorStonesOnBoard = 9;
+	private int amountOfTurns = 0;
 	
 	private LogicStone board[][] = new LogicStone[7][7];
 	
@@ -49,9 +50,16 @@ public class LogicBoard {
 	public void placeStone(int row, int col, Color color) 
 	{
 		if(board[row][col] != null) 
+		{
 			board[row][col].setColor(color);
+			amountOfTurns++;
+		}
 	}
 	
+	public int getAmountOfTurns() {
+		return amountOfTurns;
+	}
+
 	public void placeStone(LogicStone stone) 
 	{
 		if(stone.getColor() != null)
