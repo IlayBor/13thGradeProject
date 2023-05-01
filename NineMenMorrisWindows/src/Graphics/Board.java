@@ -208,7 +208,7 @@ public class Board extends JPanel{
     		markMill(rowArr);
     		repaintAllPanels();
     		
-    		if(AI.aiLevel > 0 && stone.getColor() == game.secColor) 
+    		if(AI.aiDepth > 0 && stone.getColor() == game.secColor) 
     			game.getAi().AiTurn();
     		return true;
     	}
@@ -219,9 +219,8 @@ public class Board extends JPanel{
     		markMill(colArr);
     		repaintAllPanels();
     		
-    		if(AI.aiLevel > 0 && stone.getColor() == game.secColor) 
+    		if(AI.aiDepth > 0 && stone.getColor() == game.secColor) 
     			game.getAi().AiTurn();
-    		
     		return true;
     	}
     	

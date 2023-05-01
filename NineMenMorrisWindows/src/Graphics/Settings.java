@@ -56,7 +56,30 @@ public class Settings extends JPanel implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == comboBox) 
 		{
-			AI.aiLevel = comboBox.getSelectedIndex();
+			int index = comboBox.getSelectedIndex();
+			switch(index) 
+			{
+				case 0: // None
+				{
+					AI.aiDepth = 0;
+					break;
+				}
+				case 1: // Easy
+				{
+					AI.aiDepth = 3;
+					break;
+				}
+				case 2: // Medium
+				{
+					AI.aiDepth = 5;
+					break;
+				}
+				case 3: // Hard
+				{
+					AI.aiDepth = 7;
+					break;
+				}	
+			}
 		}
 		if(e.getSource() == backButton)
 		{

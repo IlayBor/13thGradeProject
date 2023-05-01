@@ -118,8 +118,8 @@ public class Stone extends JPanel{
 	{
 		public void mousePressed(MouseEvent e) 
 		{	
-			// If there is ai, allow to play only when its your turn.
-			if(!(AI.aiLevel > 0 && board.getGame().getCurrentPlayerColor() == AI.aiColor))
+			// If there is AI, allow to play only when its your turn.
+			if(!(AI.aiDepth > 0 && board.getGame().getCurrentPlayerColor() == AI.aiColor))
 			{
 				// Stone placing phase
 				if(board.getGamePhase() == Phase.place) 

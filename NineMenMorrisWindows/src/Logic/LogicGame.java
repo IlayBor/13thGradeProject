@@ -129,101 +129,6 @@ public class LogicGame {
     	return false;
 	}
 	
-	public boolean isBlockingRow(LogicStone futureStone) 
-	{
-		Color opponentColor = futureStone.getColor() == Game.firstColor ? Game.secColor : Game.firstColor; 
-		
-		int counter = 0;
-		int rowToCheck = futureStone.getRow();
-		int startCol = (rowToCheck == 3) ? futureStone.getCol() < 3 ? 0 : 4 : 0;
-		int endCol = (rowToCheck == 3) ? futureStone.getCol() < 3 ? 3 : 7: 7;
-		
-		for(int curCol = startCol; curCol < endCol; curCol++) 
-		{
-			if(logicBoard.getBoard()[rowToCheck][curCol] != null) // if exists
-				if(logicBoard.getBoard()[rowToCheck][curCol].getColor() == opponentColor)
-					counter++;
-		}
-		return (counter == 2);
-	}
-	
-	public boolean isBlockingCol(LogicStone futureStone) 
-	{
-		Color opponentColor = futureStone.getColor() == Game.firstColor ? Game.secColor : Game.firstColor; 
-		
-		int counter = 0;
-		
-		int colToCheck = futureStone.getCol();
-		int startRow = (colToCheck == 3) ? futureStone.getRow() < 3 ? 0 : 4 : 0;
-		int endRow = (colToCheck == 3) ? futureStone.getRow() < 3 ? 3 : 7: 7;
-		
-		for(int curRow = startRow; curRow < endRow; curRow++) 
-		{
-			if(logicBoard.getBoard()[curRow][colToCheck] != null) // if exists
-				if(logicBoard.getBoard()[curRow][colToCheck].getColor() == opponentColor)
-					counter++;
-		}
-		return (counter == 2);
-	}
-	
-	public boolean isBlockingTrio(LogicStone futureStone) 
-	{
-		return isBlockingRow(futureStone) || isBlockingCol(futureStone);
-	}
-	
-	public boolean isDuoRow(LogicStone futureStone) 
-	{
-		int stonesInRow = 0;
-		Color color = futureStone.getColor();
-		Color opponentColor = color == Game.firstColor ? Game.secColor : Game.firstColor;
-		
-		int rowToCheck = futureStone.getRow();
-		int startCol = (rowToCheck == 3) ? futureStone.getCol() < 3 ? 0 : 4 : 0;
-		int endCol = (rowToCheck == 3) ? futureStone.getCol() < 3 ? 3 : 7: 7;
-		
-		for(int curCol = startCol; curCol < endCol; curCol++) 
-		{
-			// if exists
-			if(logicBoard.getBoard()[rowToCheck][curCol] != null)
-				// if have 2 right colored stones
-				if(logicBoard.getBoard()[rowToCheck][curCol].getColor() == color)
-					stonesInRow++;
-				// if have a stone in the wrong color
-				else if(logicBoard.getBoard()[rowToCheck][curCol].getColor() == opponentColor)
-					return false;
-		}
-		return (stonesInRow == 2);
-	} 
-	
-	public boolean isDuoCol(LogicStone futureStone) 
-	{
-		int stonesInCol = 0;
-		Color color = futureStone.getColor();
-		Color opponentColor = color == Game.firstColor ? Game.secColor : Game.firstColor;
-		
-		int colToCheck = futureStone.getCol();
-		int startRow = (colToCheck == 3) ? futureStone.getRow() < 3 ? 0 : 4 : 0;
-		int endRow = (colToCheck == 3) ? futureStone.getRow() < 3 ? 3 : 7: 7;
-		
-		for(int curRow = startRow; curRow < endRow; curRow++) 
-		{
-			// if exists
-			if(logicBoard.getBoard()[curRow][colToCheck] != null)
-				// if have 2 right colored stones
-				if(logicBoard.getBoard()[curRow][colToCheck].getColor() == color)
-					stonesInCol++;
-				// if have a stone in the wrong color
-				else if(logicBoard.getBoard()[curRow][colToCheck].getColor() == opponentColor)
-					return false;
-		}
-		return (stonesInCol == 2);
-	}
-	
-	public boolean isCreatingDuo(LogicStone futureStone) 
-	{
-		return isDuoRow(futureStone) || isDuoCol(futureStone);
-	}
-	
 	public ArrayList<Move> allPossibleMoves(Color curColor) 
 	{
 		ArrayList<Move> possibleMoves = new ArrayList<Move>();
@@ -273,9 +178,5 @@ public class LogicGame {
 
 	public LogicBoard getLogicBoard() {
 		return logicBoard;
-	}
-
-	public void setLogicBoard(LogicBoard logicBoard) {
-		this.logicBoard = logicBoard;
 	}
 }

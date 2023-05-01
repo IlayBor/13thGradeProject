@@ -50,7 +50,7 @@ public class Game extends JPanel implements ActionListener{
 		board.setBounds(Frame.frameX/2-Board.boardX/2 , 0, Board.boardX,Board.boardY );
 		add(board);
 		
-		if(Ai.aiLevel > 0)
+		if(Ai.aiDepth > 0)
 			Ai = new AI(board);
 		
 		firstColorBox = new Box(firstColor, this);
@@ -78,7 +78,7 @@ public class Game extends JPanel implements ActionListener{
 		
 		currentPlayerColor = currentPlayerColor == Game.firstColor ? secColor : firstColor;
 		
-		if(Ai.aiLevel > 0 && currentPlayerColor == secColor) 
+		if(Ai.aiDepth > 0 && currentPlayerColor == secColor) 
 		{
 			Ai.AiTurn();
 		}
