@@ -92,6 +92,8 @@ public class Board extends JPanel{
     	stone.drawStone(game.getCurrentPlayerColor());
 		logicGame.getLogicBoard().placeStone(stone.getRow(), stone.getCol(), game.getCurrentPlayerColor());
 		
+		logicGame.getLogicBoard().increaseAmountOfTurns();
+		
 		// Change game phase
 		if(game.getFirstColorStonesLeft() == 0 && game.getSecColorStonesLeft() == 0) 
 		{

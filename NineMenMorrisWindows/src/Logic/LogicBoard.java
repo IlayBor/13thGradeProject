@@ -50,14 +50,7 @@ public class LogicBoard {
 	public void placeStone(int row, int col, Color color) 
 	{
 		if(board[row][col] != null) 
-		{
 			board[row][col].setColor(color);
-			amountOfTurns++;
-		}
-	}
-	
-	public int getAmountOfTurns() {
-		return amountOfTurns;
 	}
 
 	public void placeStone(LogicStone stone) 
@@ -82,12 +75,35 @@ public class LogicBoard {
 		removeStone(m.getCurRow(), m.getCurCol());
 	}	
 	
+	public void reverseMove(Move m) 
+	{
+		placeStone(m.getCurRow(), m.getCurCol() ,board[m.getNextRow()][m.getNextCol()].getColor());
+		removeStone(m.getNextRow(), m.getNextCol());
+	}
+	
+	public void increaseStonesOnBoard(Color color) 
+	{
+		if(color == Game.firstColor)
+			firstColorStonesOnBoard++;
+		else 
+			secColorStonesOnBoard++;
+	}
+	
 	public void decreaseStonesOnBoard(Color color) 
 	{
 		if(color == Game.firstColor)
 			firstColorStonesOnBoard--;
 		else 
 			secColorStonesOnBoard--;
+	}
+	
+	public void increaseAmountOfTurns() 
+	{
+		amountOfTurns++;
+	}
+	
+	public int getAmountOfTurns() {
+		return amountOfTurns;
 	}
 	
 	public void printLogicBoard() 
