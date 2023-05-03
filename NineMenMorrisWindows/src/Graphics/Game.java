@@ -75,7 +75,6 @@ public class Game extends JPanel implements ActionListener{
 	public void changeTurn() 
 	{
 		board.unmarkMill();
-		
 		currentPlayerColor = currentPlayerColor == Game.firstColor ? secColor : firstColor;
 		
 		if(Ai.aiDepth > 0 && currentPlayerColor == secColor) 

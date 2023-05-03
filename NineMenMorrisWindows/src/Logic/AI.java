@@ -89,7 +89,7 @@ public class AI {
 		if(possibleGame.isWinner(futureStone.getColor())) 
 			score += 1000;
 		else if(possibleGame.isStoneInTrio(futureStone))
-			score += 200;
+			score += 100;
 		else 
 			score += possibleGame.allPossibleMoves(futureColor).size();
 		
@@ -390,5 +390,10 @@ public class AI {
 		ArrayList<Move> returnOne = new ArrayList<Move>();
 		returnOne.add(bestMoves.get(0));
 		return returnOne;
+	}
+	
+	public void evaluate2() 
+	{
+		
 	}
 }
