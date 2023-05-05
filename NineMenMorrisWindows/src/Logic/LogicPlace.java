@@ -2,15 +2,15 @@ package Logic;
 
 import java.awt.Color;
 
-public class PlaceStone extends LogicStone implements Comparable{
+public class LogicPlace extends LogicStone implements Comparable{
 	private int score;
 
-	public PlaceStone(int _row, int _col, Color _color, int score) {
+	public LogicPlace(int _row, int _col, Color _color, int score) {
 		super(_row, _col, _color);
 		this.score = score;
 	}
 	
-	public PlaceStone(LogicStone stone, int score) {
+	public LogicPlace(LogicStone stone, int score) {
 		super(stone.row, stone.col, stone.color);
 		this.score = score;
 	}
@@ -28,9 +28,9 @@ public class PlaceStone extends LogicStone implements Comparable{
 	}
 	
 	public int compareTo(Object o) {
-		if(o instanceof PlaceStone) 
+		if(o instanceof LogicPlace) 
 		{
-			PlaceStone otherStone = (PlaceStone)o;
+			LogicPlace otherStone = (LogicPlace)o;
 			return Integer.compare(this.score, otherStone.score);
 		}
 		throw new IllegalArgumentException("Object is not a PlaceStone");

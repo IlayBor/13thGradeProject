@@ -152,6 +152,33 @@ public class LogicGame {
 		return stones;
 	}
 	
+	public int countMills(Color curColor) 
+	{
+		ArrayList<Integer> rowsToSkip = new ArrayList<Integer>();
+		ArrayList<Integer> colsToSkip = new ArrayList<Integer>();
+		
+		int counter = 0;
+		
+		for(int duoIndex = 0; duoIndex < Board.allowedColArr.length; duoIndex++) 
+    	{
+			if(logicBoard.getBoard()[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]].getColor() == curColor) 
+			{
+				if(!rowsToSkip.contains(Board.allowedRowArr[duoIndex]) && checkRow(logicBoard.getBoard()[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]]) != null) 
+				{
+					counter++;
+					rowsToSkip.add(Board.allowedRowArr[duoIndex]);
+				}
+				if(!colsToSkip.contains(Board.allowedColArr[duoIndex]) && checkCol(logicBoard.getBoard()[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]]) != null) 
+				{
+					counter++;
+					colsToSkip.add(Board.allowedColArr[duoIndex]);
+				}
+			}
+    	}
+		
+		return counter;
+	}
+	
 	public boolean isWinner(Color _color) 
 	{
 		Color loserColor = _color == Game.firstColor ? Game.secColor : Game.firstColor;
