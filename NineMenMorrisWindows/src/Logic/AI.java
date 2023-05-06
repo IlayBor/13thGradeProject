@@ -311,7 +311,7 @@ public class AI {
 		return allPlacesWithColor;
 	}
 	
-	public int evaluateBoard(Color color) 
+	public int evaluateBoard(Color color, int depth) 
 	{
 		int mul = color != aiColor ? 1 : -1;
 		
@@ -327,114 +327,88 @@ public class AI {
 		whiteScore = whiteStones + whiteMills + whiteMoves;
 		blackScore = blackStones + blackMills + blackMoves;
 		
-		// Junk moves
-		if(whiteStones <= 3) 
-		{
-			whiteScore = whiteStones + whiteMills;
-			System.out.println((whiteScore - blackScore) * mul);
-		}
-		
-		return (whiteScore - blackScore) * mul;
+		return (whiteScore - blackScore) *  mul;
 	}
 	
 	public LogicPlace miniMaxPlace(int depth, Color color, int alpha, int beta) 
 	{	
-		LogicStone removedStone;
-		Color opponentColor = color == Game.firstColor ? Game.secColor : Game.firstColor;
-		ArrayList<LogicPlace> allPlaces = getAllPossiblePlaces(color);
-		int maxIndex = 0;
-		boolean flag = true;
-		
-		for(int i = 0; i < allPlaces.size() && flag; i++) 
+		if(depth > 1) 
 		{
-			removedStone = null;
-			logicBoard.placeStone(allPlaces.get(i));
+			LogicStone removedStone;
+			Color opponentColor = color == Game.firstColor ? Game.secColor : Game.firstColor;
+			ArrayList<LogicPlace> allPlaces = getAllPossiblePlaces(color);
+			int maxIndex = 0;
+			boolean flag = true;
 			
-			if(logicGame.isStoneInTrio(allPlaces.get(i)) && logicGame.canRemoveAnyStone(opponentColor)) 
+			for(int i = 0; i < allPlaces.size() && flag; i++) 
 			{
-				removedStone = getBestStoneToRemove(opponentColor, Phase.place);
-				logicBoard.removeStone(removedStone);
-				logicBoard.decreaseStonesOnBoard(opponentColor);
-			}
-			
-			allPlaces.get(i).setScore(evaluateBoard(color));
-			if(depth > 1)
-				allPlaces.get(i).addScore(miniMaxPlace(depth-1, opponentColor, alpha, beta).getScore() * -1);
+				removedStone = null;
+				logicBoard.placeStone(allPlaces.get(i));
 				
-			if(allPlaces.get(i).getScore() > allPlaces.get(maxIndex).getScore())
-				maxIndex = i;
-			
-			logicBoard.removeStone(allPlaces.get(i));
-			
-			if(removedStone != null) {
-				logicBoard.placeStone(removedStone);
-				logicBoard.increaseStonesOnBoard(opponentColor);
+				if(logicGame.isStoneInTrio(allPlaces.get(i)) && logicGame.canRemoveAnyStone(opponentColor)) 
+				{
+					removedStone = getBestStoneToRemove(opponentColor, Phase.place);
+					logicBoard.removeStone(removedStone);
+					logicBoard.decreaseStonesOnBoard(opponentColor);
+				}
+				
+				allPlaces.get(i).setScore(miniMaxPlace(depth-1, opponentColor, alpha, beta).getScore() * -1);
+					
+				if(allPlaces.get(i).getScore() > allPlaces.get(maxIndex).getScore())
+					maxIndex = i;
+				
+				logicBoard.removeStone(allPlaces.get(i));
+				
+				if(removedStone != null) {
+					logicBoard.placeStone(removedStone);
+					logicBoard.increaseStonesOnBoard(opponentColor);
+				}
 			}
-			
-			/*
-			if(color == aiColor) 
-				alpha = Math.max(alpha, allPlaces.get(i).getScore());
-			else
-				beta = Math.min(beta, allPlaces.get(i).getScore() * -1);
-			if (beta <= alpha)
-                flag = false;
-            */
+			return allPlaces.get(maxIndex);
 		}
-		return allPlaces.get(maxIndex);
+		return new LogicPlace(-1, -1, null, evaluateBoard(color, depth));
 	}
 	
 	public Move miniMaxMove(int depth, Color color, int alpha, int beta) 
 	{	
-		LogicStone removedStone;
-		Color opponentColor = color == Game.firstColor ? Game.secColor : Game.firstColor;
-		ArrayList<Move> allMoves = logicGame.allPossibleMoves(color);
-		int maxIndex = 0, maxValue = Integer.MIN_VALUE;
-		boolean flag = true;
-		
-		for(int i = 0; i < allMoves.size() && flag; i++) 
-		{
-			removedStone = null;
-			LogicStone futureStone = new LogicStone(allMoves.get(i).getNextRow(), allMoves.get(i).getNextCol(), color);
-			logicBoard.moveStone(allMoves.get(i));
+		if(depth > 1) {
+			LogicStone removedStone;
+			Color opponentColor = color == Game.firstColor ? Game.secColor : Game.firstColor;
+			ArrayList<Move> allMoves = logicGame.allPossibleMoves(color);
+			int maxIndex = 0, maxValue = Integer.MIN_VALUE;
+			boolean flag = true;
 			
-			if(logicGame.isStoneInTrio(futureStone) && logicGame.canRemoveAnyStone(opponentColor)) 
+			for(int i = 0; i < allMoves.size() && flag; i++) 
 			{
-				removedStone = getBestStoneToRemove(opponentColor, Phase.move);
-				logicBoard.removeStone(removedStone);
-				logicBoard.decreaseStonesOnBoard(opponentColor);
+				removedStone = null;
+				LogicStone futureStone = new LogicStone(allMoves.get(i).getNextRow(), allMoves.get(i).getNextCol(), color);
+				logicBoard.moveStone(allMoves.get(i));
+				
+				if(logicGame.isStoneInTrio(futureStone) && logicGame.canRemoveAnyStone(opponentColor)) 
+				{
+					removedStone = getBestStoneToRemove(opponentColor, Phase.move);
+					logicBoard.removeStone(removedStone);
+					logicBoard.decreaseStonesOnBoard(opponentColor);
+				}
+				
+				allMoves.get(i).setScore(miniMaxMove(depth-1, opponentColor, alpha, beta).getScore() * -1);
+				
+				if(allMoves.get(i).getScore() > allMoves.get(maxIndex).getScore()) 
+					maxIndex = i;
+				
+				logicBoard.reverseMove(allMoves.get(i));
+				
+				if(removedStone != null) {
+					logicBoard.placeStone(removedStone);
+					logicBoard.increaseStonesOnBoard(opponentColor);
+				}
 			}
 			
-			allMoves.get(i).setScore(evaluateBoard(color));
-			if(depth > 1)
-				allMoves.get(i).addScore(miniMaxMove(depth-1, opponentColor, alpha, beta).getScore() * -1);
-			
-			if(allMoves.get(i).getScore() > allMoves.get(maxIndex).getScore()) 
-				maxIndex = i;
-			
-			logicBoard.reverseMove(allMoves.get(i));
-			
-			if(removedStone != null) {
-				logicBoard.placeStone(removedStone);
-				logicBoard.increaseStonesOnBoard(opponentColor);
-			}
-			
-			/*
-			if(color == aiColor) 
-				alpha = Math.max(alpha, allMoves.get(i).getScore());
-			else
-				beta = Math.min(beta, allMoves.get(i).getScore() * -1);
-			if (beta <= alpha)
-                flag = false;
-            */
-            
+			// if no moves return WIN
+			if(allMoves.size() == 0)
+					logicBoard.printLogicBoard();
+			return allMoves.get(maxIndex);
 		}
-		// if no moves return WIN
-		if(allMoves.size() == 0)
-				logicBoard.printLogicBoard();
-		
-		return allMoves.get(maxIndex);
+		return new Move(-1, -1, -1, -1, evaluateBoard(color, depth));
 	}
-	
-	
-	
 }
