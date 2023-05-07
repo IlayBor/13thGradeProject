@@ -143,7 +143,6 @@ public class AI {
 			return bestStoneToRemoveMovePhase(enemyColor);
 	}
 	
-	
 	private LogicStone bestStoneToRemovePlacePhase(Color enemyColor) 
 	{
 		ArrayList<LogicStone> stones = logicGame.getAllStonesOnBoard(enemyColor);

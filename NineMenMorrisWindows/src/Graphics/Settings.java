@@ -22,7 +22,7 @@ import Logic.LogicGame;
 public class Settings extends JPanel implements ActionListener{
 	private Frame frame;
 	private JButton backButton;
-	private String[] options = {"Human", "Easy", "Medium", "Hard"}; 
+	private String[] options = {"Human", "Easy", "Hard"}; 
 	private JComboBox comboBox; 
 	private ImageIcon image;
 	private JLabel label;
@@ -69,16 +69,11 @@ public class Settings extends JPanel implements ActionListener{
 					AI.aiDepth = 3;
 					break;
 				}
-				case 2: // Medium
+				case 2: // Hard
 				{
 					AI.aiDepth = 5;
 					break;
 				}
-				case 3: // Hard
-				{
-					AI.aiDepth = 7;
-					break;
-				}	
 			}
 		}
 		if(e.getSource() == backButton)
