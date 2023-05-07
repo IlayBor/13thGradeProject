@@ -59,6 +59,7 @@ public class Board extends JPanel{
         initBoard();
     }
     
+    // Creates the graphic board
     public void initBoard() 
     {
     	for(int i = 0; i < stoneArr.length; i++) 
@@ -70,6 +71,7 @@ public class Board extends JPanel{
     		}
     	}
     	
+    	// adding the listeners to the needed panels
     	for(int duoIndex = 0; duoIndex < allowedColArr.length; duoIndex++) 
     		stoneArr[allowedRowArr[duoIndex]][allowedColArr[duoIndex]].addMouseListener();
     }
@@ -210,7 +212,7 @@ public class Board extends JPanel{
     		markMill(rowArr);
     		repaintAllPanels();
     		
-    		if(AI.aiDepth > 0 && stone.getColor() == game.secColor) 
+    		if(AI.aiDepth > 0 && stone.getColor() == AI.aiColor) 
     			game.getAi().AiTurn();
     		return true;
     	}
@@ -221,7 +223,7 @@ public class Board extends JPanel{
     		markMill(colArr);
     		repaintAllPanels();
     		
-    		if(AI.aiDepth > 0 && stone.getColor() == game.secColor) 
+    		if(AI.aiDepth > 0 && stone.getColor() == AI.aiColor) 
     			game.getAi().AiTurn();
     		return true;
     	}

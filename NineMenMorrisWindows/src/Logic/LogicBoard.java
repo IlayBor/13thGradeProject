@@ -49,12 +49,14 @@ public class LogicBoard {
 	
 	public void placeStone(int row, int col, Color color) 
 	{
+		// checks if the place exists (row,col)
 		if(board[row][col] != null) 
 			board[row][col].setColor(color);
 	}
 
 	public void placeStone(LogicStone stone) 
 	{
+		// places a stone, cannot place an empty stone
 		if(stone.getColor() != null)
 			placeStone(stone.getRow(), stone.getCol(), stone.getColor());
 	}

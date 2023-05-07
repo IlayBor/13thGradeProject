@@ -77,10 +77,9 @@ public class Game extends JPanel implements ActionListener{
 		board.unmarkMill();
 		currentPlayerColor = currentPlayerColor == Game.firstColor ? secColor : firstColor;
 		
-		if(Ai.aiDepth > 0 && currentPlayerColor == secColor) 
-		{
+		// if the AI is ON then let him play
+		if(Ai.aiDepth > 0 && currentPlayerColor == AI.aiColor) 
 			Ai.AiTurn();
-		}
 	}
 	
 	public void actionPerformed(ActionEvent e) {

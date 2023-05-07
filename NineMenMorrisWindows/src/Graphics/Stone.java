@@ -118,7 +118,7 @@ public class Stone extends JPanel{
 	{
 		public void mousePressed(MouseEvent e) 
 		{	
-			// If there is AI, allow to play only when its your turn.
+			// If there is AI, allow to play only when its the right turn.
 			if(!(AI.aiDepth > 0 && board.getGame().getCurrentPlayerColor() == AI.aiColor))
 			{
 				// Stone placing phase
@@ -154,6 +154,7 @@ public class Stone extends JPanel{
 		return col;
 	}
 	
+	//Function that makes sure that the background image, and stone drawings are fitting nicely (and they look centered).
 	public void setCenterValues() 
 	{
 		switch(row) 

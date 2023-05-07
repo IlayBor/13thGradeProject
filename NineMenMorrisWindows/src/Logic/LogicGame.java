@@ -20,9 +20,10 @@ public class LogicGame {
 		this.logicBoard = logicBoard;
 	}
 	
+	// Make sure the move is allowed
 	public boolean isMoveAllowed(Move m) 
 	{	
-		// Junk moves
+		// Junk moves, everything allowed.
 		if(logicBoard.getBoard()[m.getCurRow()][m.getCurCol()].getColor() == Game.firstColor && logicBoard.getFirstColorStonesOnBoard() <= 3)
 			return true;
 		if(logicBoard.getBoard()[m.getCurRow()][m.getCurCol()].getColor() == Game.secColor && logicBoard.getSecColorStonesOnBoard() <= 3)
@@ -55,18 +56,19 @@ public class LogicGame {
 			allowedRowDis = 1;
 			break;
 		}
-		
+		// Row move
 		if(Math.abs(m.getCurRow() - m.getNextRow()) == allowedRowDis && m.getCurCol() - m.getNextCol() == 0)
 			return true;
+		// Col move
 		if(Math.abs(m.getCurCol() - m.getNextCol()) == allowedColDis && m.getCurRow() - m.getNextRow() == 0)
 			return true;
 		return false;
 	}
 	
+	// returns the allowed adjacent moves.
 	public ArrayList<Move> allowedMoves(LogicStone stone)
 	{
 		ArrayList<Move> allowedMovesArr = new ArrayList<Move>();
-		
 		for(int duoIndex = 0; duoIndex < Board.allowedColArr.length; duoIndex++) 
 		{
 			if(logicBoard.getBoard()[LogicBoard.allowedRowArr[duoIndex]][LogicBoard.allowedColArr[duoIndex]].getColor() == null) 
@@ -79,17 +81,18 @@ public class LogicGame {
 		return allowedMovesArr;
 	}
 	
+	// check for a mill in a row, returns the mill if found, else null.
 	public ArrayList<LogicStone> checkRow(LogicStone stone) 
 	{
 		int rowToCheck = stone.getRow();
-		
+		// make sure the check only the relevant cols
 		int startCol = (rowToCheck == 3) ? stone.getCol() < 3 ? 0 : 4 : 0;
 		int endCol = (rowToCheck == 3) ? stone.getCol() < 3 ? 3 : 7: 7;
 		ArrayList<LogicStone> logicStoneArr = new ArrayList<LogicStone>();
 		
 		for(int curCol = startCol; curCol < endCol; curCol++) 
 		{
-			if(logicBoard.getBoard()[rowToCheck][curCol] != null) // if exists
+			if(logicBoard.getBoard()[rowToCheck][curCol] != null) // if place exists on the board
 				if(logicBoard.getBoard()[rowToCheck][curCol].getColor() == stone.getColor())
 					logicStoneArr.add(logicBoard.getBoard()[rowToCheck][curCol]);
 		}
@@ -99,14 +102,14 @@ public class LogicGame {
 	public ArrayList<LogicStone> checkCol(LogicStone stone) 
 	{
 		int colToCheck = stone.getCol();
-		
+		// make sure the check only the relevant rows
 		int startRow = (colToCheck == 3) ? stone.getRow() < 3 ? 0 : 4 : 0;
 		int endRow = (colToCheck == 3) ? stone.getRow() < 3 ? 3 : 7: 7;
 		ArrayList<LogicStone> logicStoneArr = new ArrayList<LogicStone>();
 		
 		for(int curRow = startRow; curRow < endRow; curRow++) 
 		{
-			if(logicBoard.getBoard()[curRow][colToCheck] != null) // if exists
+			if(logicBoard.getBoard()[curRow][colToCheck] != null) // if place exists on the board
 				if(logicBoard.getBoard()[curRow][colToCheck].getColor() == stone.getColor())
 					logicStoneArr.add(logicBoard.getBoard()[curRow][colToCheck]);
 		}
@@ -129,18 +132,6 @@ public class LogicGame {
     	return false;
 	}
 	
-	public ArrayList<Move> allPossibleMoves(Color curColor) 
-	{
-		ArrayList<Move> possibleMoves = new ArrayList<Move>();
-		
-		for(int duoIndex = 0; duoIndex < Board.allowedColArr.length; duoIndex++) 
-    	{
-			if(logicBoard.getBoard()[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]].getColor() == curColor) 
-				possibleMoves.addAll(allowedMoves(logicBoard.getBoard()[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]]));
-    	}
-		return possibleMoves;
-	}
-	
 	public ArrayList<LogicStone> getAllStonesOnBoard(Color color)
 	{
 		ArrayList<LogicStone> stones = new ArrayList<LogicStone>();
@@ -152,41 +143,25 @@ public class LogicGame {
 		return stones;
 	}
 	
-	public int countMills(Color curColor) 
+	public ArrayList<Move> allPossibleMoves(Color curColor) 
 	{
-		ArrayList<Integer> rowsToSkip = new ArrayList<Integer>();
-		ArrayList<Integer> colsToSkip = new ArrayList<Integer>();
+		ArrayList<LogicStone> stonesOnBoard = getAllStonesOnBoard(curColor);
+		ArrayList<Move> possibleMoves = new ArrayList<Move>();
+		for(LogicStone stone : stonesOnBoard)
+			possibleMoves.addAll(allowedMoves(stone));
 		
-		int counter = 0;
-		
-		for(int duoIndex = 0; duoIndex < Board.allowedColArr.length; duoIndex++) 
-    	{
-			if(logicBoard.getBoard()[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]].getColor() == curColor) 
-			{
-				if(!rowsToSkip.contains(Board.allowedRowArr[duoIndex]) && checkRow(logicBoard.getBoard()[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]]) != null) 
-				{
-					counter++;
-					rowsToSkip.add(Board.allowedRowArr[duoIndex]);
-				}
-				if(!colsToSkip.contains(Board.allowedColArr[duoIndex]) && checkCol(logicBoard.getBoard()[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]]) != null) 
-				{
-					counter++;
-					colsToSkip.add(Board.allowedColArr[duoIndex]);
-				}
-			}
-    	}
-		
-		return counter;
+		return possibleMoves;
 	}
 	
-	public boolean isWinner(Color _color) 
+	// check for winner
+	public boolean isWinner(Color color) 
 	{
-		Color loserColor = _color == Game.firstColor ? Game.secColor : Game.firstColor;
-		if(_color == Game.firstColor && logicBoard.getSecColorStonesOnBoard() < 3)
+		Color opponentColor = color == Game.firstColor ? Game.secColor : Game.firstColor;
+		if(color == Game.firstColor && logicBoard.getSecColorStonesOnBoard() < 3)
 			return true;
-		if(_color == Game.secColor && logicBoard.getFirstColorStonesOnBoard() < 3)
+		if(color == Game.secColor && logicBoard.getFirstColorStonesOnBoard() < 3)
 			return true;
-		if(allPossibleMoves(loserColor).size() == 0)
+		if(allPossibleMoves(opponentColor).size() == 0)
 			return true;
 		return false;
 	}

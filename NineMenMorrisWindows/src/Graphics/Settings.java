@@ -59,7 +59,7 @@ public class Settings extends JPanel implements ActionListener{
 			int index = comboBox.getSelectedIndex();
 			switch(index) 
 			{
-				case 0: // None
+				case 0: // None - Human
 				{
 					AI.aiDepth = 0;
 					break;
