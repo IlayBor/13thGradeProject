@@ -90,8 +90,8 @@ public class AI {
 		return score;
 	}
 	
-	// Returns an arrayList with all the possible places to place a stone, sorted from best to worst using the eval.
-	public ArrayList<LogicPlace> getPlacesSorted(Color color) 
+	// Returns an arrayList with all the possible places to place a stone, sorted from best to worst using the eval, add the sum score of the nodes above
+	public ArrayList<LogicPlace> getPlacesSorted(Color color, int score) 
 	{
 		ArrayList<LogicStone> possiblePlaces = logicGame.getAllStonesOnBoard(null);
 		ArrayList<LogicPlace> placesSorted = new ArrayList<LogicPlace>();
@@ -99,6 +99,7 @@ public class AI {
 		for(int i = 0; i < possiblePlaces.size(); i++) 
 		{
 			LogicPlace curPlaceStone = new LogicPlace(possiblePlaces.get(i), evaluate(possiblePlaces.get(i), color));
+			curPlaceStone.addScore(score);
 			placesSorted.add(curPlaceStone);
 		}
 		
@@ -117,21 +118,21 @@ public class AI {
 			score += 1000;
 		else if(logicGame.isStoneInTrio(futureStone)) 			
 				score += 100;
-		
 		// make sure the closer the move, the better the score is.
-		score = (int)(score * Math.pow(1.1, depth));
+		score = score * depth;
 		
 		logicBoard.reverseMove(move);
 		move.setScore(score);
 	}
 	
 	// Returns an arrayList with all the possible moves, sorted from best to worst, using the eval.
-	public ArrayList<Move> getMovesSorted(Color color, int depth) 
+	public ArrayList<Move> getMovesSorted(Color color, int depth, int score) 
 	{
 		ArrayList<Move> possibleMoves = logicGame.allPossibleMoves(color);
-		for(Move move : possibleMoves) 
+		for(Move move : possibleMoves) {
 			evaluate(move, color, depth);
-		
+			move.addScore(score);
+		}
 		Collections.sort(possibleMoves, Collections.reverseOrder());
 		return possibleMoves;
 	}
@@ -192,7 +193,7 @@ public class AI {
 	
 	public LogicPlace getBestStonePlace(Color color, int depth, int alpha, int beta, int score) 
 	{
-		ArrayList<LogicPlace> allPlacesSorted = getPlacesSorted(color);
+		ArrayList<LogicPlace> allPlacesSorted = getPlacesSorted(color, score);
 		if(depth > 1  && logicBoard.getAmountOfTurns() < 17) 
 		{
 			boolean flag = true;
@@ -212,9 +213,8 @@ public class AI {
 					removedStone = getBestStoneToRemove(opponentColor, Phase.place);
 					logicBoard.removeStone(removedStone);
 				}
-				// Sum the score of the move chain.
-				allPlacesSorted.get(i).addScore(score);
-				allPlacesSorted.get(i).addScore((int)
+				// Sum the score of the place nodes above, and bubble up.
+				allPlacesSorted.get(i).setScore((int)
 						(getBestStonePlace(opponentColor, depth-1, alpha, beta, 
 								allPlacesSorted.get(i).getScore() * -1).getScore() * -1));
 				// Get the best stone place
@@ -250,7 +250,7 @@ public class AI {
 	
 	public Move getBestMove(Color color, int depth, int alpha, int beta, int score) 
 	{
-		ArrayList<Move> allMovesSorted = getMovesSorted(color, depth);
+		ArrayList<Move> allMovesSorted = getMovesSorted(color, depth, score);
 		
 		// If there is no moves, then its a loss, return loss value.
 		if(allMovesSorted.size() == 0)
@@ -276,9 +276,8 @@ public class AI {
 					removedStone = getBestStoneToRemove(opponentColor, Phase.move);
 					logicBoard.removeStone(removedStone);
 				}
-				// Sum the score of the place chain. 
-				allMovesSorted.get(i).addScore(score);
-				allMovesSorted.get(i).addScore(
+				// Sum the score of the move nodes above, and bubble up.
+				allMovesSorted.get(i).setScore(
 						getBestMove(opponentColor, depth-1, alpha, beta, 
 								allMovesSorted.get(i).getScore() * -1).getScore() *-1);
 				// Get the best move
