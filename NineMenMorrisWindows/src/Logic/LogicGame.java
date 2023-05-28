@@ -71,9 +71,9 @@ public class LogicGame {
 		ArrayList<Move> allowedMovesArr = new ArrayList<Move>();
 		for(int duoIndex = 0; duoIndex < Board.allowedColArr.length; duoIndex++) 
 		{
-			if(logicBoard.getBoard()[LogicBoard.allowedRowArr[duoIndex]][LogicBoard.allowedColArr[duoIndex]].getColor() == null) 
+			if(logicBoard.getBoard()[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]].getColor() == null) 
 			{
-				Move m = new Move(stone.getRow(), stone.getCol(), LogicBoard.allowedRowArr[duoIndex], LogicBoard.allowedColArr[duoIndex]);
+				Move m = new Move(stone.getRow(), stone.getCol(), Board.allowedRowArr[duoIndex], Board.allowedColArr[duoIndex]);
 				if(isMoveAllowed(m))
 					allowedMovesArr.add(m);
 			}
@@ -123,9 +123,9 @@ public class LogicGame {
 	
 	public boolean canRemoveAnyStone(Color color) 
 	{
-		for(int duoIndex = 0; duoIndex < LogicBoard.allowedColArr.length; duoIndex++) 
+		for(int duoIndex = 0; duoIndex < Board.allowedColArr.length; duoIndex++) 
 		{
-			LogicStone curStone = logicBoard.getBoard()[LogicBoard.allowedRowArr[duoIndex]][LogicBoard.allowedColArr[duoIndex]];
+			LogicStone curStone = logicBoard.getBoard()[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]];
 			if(curStone.getColor() == color && !isStoneInTrio(curStone)) 
 				return true;
 		}

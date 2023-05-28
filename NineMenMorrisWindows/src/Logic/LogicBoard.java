@@ -3,13 +3,11 @@ package Logic;
 import java.awt.Color;
 import java.util.Iterator;
 
+import Graphics.Board;
 import Graphics.Game;
 import Graphics.Stone;
 
 public class LogicBoard {
-	
-	public static int allowedRowArr[] = {0,0,0,1,1,1,2,2,2,3,3,3,3,3,3,4,4,4,5,5,5,6,6,6};
-	public static int allowedColArr[] = {0,3,6,1,3,5,2,3,4,0,1,2,4,5,6,2,3,4,1,3,5,0,3,6};
 	
 	public static char initChar = '0'; // not playable places
 	public static char playableChar = 'X';  // playable but empty
@@ -35,16 +33,16 @@ public class LogicBoard {
 	
 	public void copyBoard(LogicBoard copyFrom) 
 	{
-		for(int duoIndex = 0; duoIndex < allowedColArr.length; duoIndex++) 
-    		board[allowedRowArr[duoIndex]][allowedColArr[duoIndex]] = new LogicStone(copyFrom.getBoard()[allowedRowArr[duoIndex]][allowedColArr[duoIndex]]);
+		for(int duoIndex = 0; duoIndex < Board.allowedColArr.length; duoIndex++) 
+    		board[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]] = new LogicStone(copyFrom.getBoard()[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]]);
 		this.firstColorStonesOnBoard = copyFrom.firstColorStonesOnBoard;
 		this.secColorStonesOnBoard = copyFrom.secColorStonesOnBoard;
 	}
 	
 	public void initBoard() 
 	{
-    	for(int duoIndex = 0; duoIndex < allowedColArr.length; duoIndex++) 
-    		board[allowedRowArr[duoIndex]][allowedColArr[duoIndex]] = new LogicStone(allowedRowArr[duoIndex], allowedColArr[duoIndex], null);
+    	for(int duoIndex = 0; duoIndex < Board.allowedColArr.length; duoIndex++) 
+    		board[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]] = new LogicStone(Board.allowedRowArr[duoIndex], Board.allowedColArr[duoIndex], null);
 	}
 	
 	public void placeStone(int row, int col, Color color) 
