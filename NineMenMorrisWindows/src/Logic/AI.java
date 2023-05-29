@@ -61,8 +61,8 @@ public class AI {
 			graphicBoard.moveStone(nextStone, Status.paste);
 			System.out.println(String.format("Ai Moved: %s. Score: %d", bestMove, bestMove.getScore()));
 		}
-		// Removing Phase
-		else 
+		// Removing Phase - AI didnt win by blocking.
+		else if(!logicGame.isWinner(aiColor))
 		{
 			Color opponentColor = aiColor == Game.firstColor ? Game.secColor : Game.firstColor;
 			LogicStone logicStoneToRemove = getBestStoneToRemove(opponentColor, graphicBoard.getPrevPhase());
@@ -180,7 +180,7 @@ public class AI {
 		LogicStone curBestStoneToRemove = new LogicStone(bestEnemyMove.getCurRow(), bestEnemyMove.getCurCol(), opponentColor);
 		
 		// If stone is allowed to be removed
-		if(!logicGame.isStoneInTrio(curBestStoneToRemove))
+		if(curBestStoneToRemove.getCol() != -1 && !logicGame.isStoneInTrio(curBestStoneToRemove))
 			return curBestStoneToRemove;
 		// If reached here cannot remove the best move, so remove the most valuable stone.
 		return bestStoneToRemovePlacePhase(opponentColor);

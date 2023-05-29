@@ -155,13 +155,18 @@ public class LogicGame {
 	
 	// check for winner
 	public boolean isWinner(Color color) 
-	{
+	{	
+		// if not all stones has been placed.
+		if(logicBoard.getAmountOfTurns() < 18) 
+			return false;
+		
+		// check for the winner
 		Color opponentColor = color == Game.firstColor ? Game.secColor : Game.firstColor;
 		if(color == Game.firstColor && logicBoard.getSecColorStonesOnBoard() < 3)
 			return true;
 		if(color == Game.secColor && logicBoard.getFirstColorStonesOnBoard() < 3)
 			return true;
-		if(allPossibleMoves(opponentColor).size() == 0)
+		if(allPossibleMoves(opponentColor).size() == 0) 
 			return true;
 		return false;
 	}

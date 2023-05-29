@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import Graphics.Board.Phase;
 import Graphics.Board.Status;
 import Logic.AI;
+import Logic.LogicBoard;
 import Logic.LogicStone;
 import Logic.Move;
 
@@ -76,9 +77,10 @@ public class Game extends JPanel implements ActionListener{
 	{
 		board.unmarkMill();
 		currentPlayerColor = currentPlayerColor == Game.firstColor ? secColor : firstColor;
+		Color opponentColor = currentPlayerColor == Game.firstColor ? Game.secColor : Game.firstColor;
 		
-		// if the AI is ON then let him play
-		if(Ai.aiDepth > 0 && currentPlayerColor == AI.aiColor) 
+		// If AI is activated, and its the AI turn, and the game is not over.
+		if(Ai.aiDepth > 0 && currentPlayerColor == AI.aiColor && !board.getLogicGame().isWinner(opponentColor)) 
 			Ai.AiTurn();
 	}
 	
