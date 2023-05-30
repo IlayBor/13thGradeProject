@@ -49,7 +49,7 @@ public class AI {
 		{
 			LogicPlace AiStone = getBestStonePlace(aiColor, aiDepth);
 			graphicBoard.placeStone(graphicBoard.getStoneArr()[AiStone.getRow()][AiStone.getCol()]);
-			System.out.println(String.format("Ai Placed: %s. With score : %d", AiStone, AiStone.getScore()));
+			//System.out.println(String.format("Ai Placed: %s. With score : %d", AiStone, AiStone.getScore()));
 		}
 		// Moving Phase
 		else if(graphicBoard.getGamePhase() == Phase.move) 
@@ -59,16 +59,16 @@ public class AI {
 			Stone nextStone = graphicBoard.getStoneArr()[bestMove.getNextRow()][bestMove.getNextCol()];
 			graphicBoard.moveStone(curStone, Status.copy);
 			graphicBoard.moveStone(nextStone, Status.paste);
-			System.out.println(String.format("Ai Moved: %s. Score: %d", bestMove, bestMove.getScore()));
+			//System.out.println(String.format("Ai Moved: %s. Score: %d", bestMove, bestMove.getScore()));
 		}
-		// Removing Phase - AI didnt win by blocking.
+		// Removing Phase - if AI didnt win by blocking.
 		else if(!logicGame.isWinner(aiColor))
 		{
 			Color opponentColor = aiColor == Game.firstColor ? Game.secColor : Game.firstColor;
 			LogicStone logicStoneToRemove = getBestStoneToRemove(opponentColor, graphicBoard.getPrevPhase());
 			Stone graphicStoneToRemove = graphicBoard.getStoneArr()[logicStoneToRemove.getRow()][logicStoneToRemove.getCol()];
 			graphicBoard.removeStone(graphicStoneToRemove);
-			System.out.println(String.format("Ai Removed: %s", logicStoneToRemove));
+			//System.out.println(String.format("Ai Removed: %s", logicStoneToRemove));
 		}
 	}
 	

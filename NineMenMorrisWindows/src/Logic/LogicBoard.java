@@ -25,20 +25,6 @@ public class LogicBoard {
 		initBoard();
 	}
 	
-	public LogicBoard(LogicBoard copyFrom) 
-	{
-		initBoard();
-		copyBoard(copyFrom);
-	}
-	
-	public void copyBoard(LogicBoard copyFrom) 
-	{
-		for(int duoIndex = 0; duoIndex < Board.allowedColArr.length; duoIndex++) 
-    		board[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]] = new LogicStone(copyFrom.getBoard()[Board.allowedRowArr[duoIndex]][Board.allowedColArr[duoIndex]]);
-		this.firstColorStonesOnBoard = copyFrom.firstColorStonesOnBoard;
-		this.secColorStonesOnBoard = copyFrom.secColorStonesOnBoard;
-	}
-	
 	public void initBoard() 
 	{
     	for(int duoIndex = 0; duoIndex < Board.allowedColArr.length; duoIndex++) 
